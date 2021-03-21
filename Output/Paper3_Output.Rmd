@@ -8,3 +8,18 @@ output: html_document
 ```{r}
 
 ```
+
+#Abstract
+
+#Introduction
+
+#Data and Model
+
+#Results
+
+#Discussion
+
+
+#Appendix
+
+## Explortary analysis
