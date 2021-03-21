@@ -21,15 +21,22 @@ library(survey)
 library(stargazer)
 library(weights)
 
-rm(list=ls())
 
-load("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/deepfake.RData")
+
+### Yilin file path
+#load("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/deepfake.RData")
+
+load("deepfake.RData")
 
 #####------------------------------------------------------#
 #####  Aggregate/clean CPS 2018 ####
 #####------------------------------------------------------#
 
-cps2018_ <- readRDS("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs.rds")
+### Yilin file path
+#cps2018_ <- readRDS("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs.rds")
+
+
+cps2018_ <- readRDS("cps2018_crosstabs.rds")
 cps2018 <- cps2018_
 cps2018$value <- cps2018$name
 
@@ -62,8 +69,14 @@ cps2018 <- cps2018 %>%
 # cps2018$value[cps2018$name == "45 to 64 years"] <- "45-64"
 # cps2018$value[cps2018$name == "65 years and over"] <- "65+"
 # cps2018$value[cps2018$variable == "age" & is.na(cps2018$name)] <- "N/A"
-cps2018age <- read_delim("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_age.txt", delim="|",
-                       col_names = c("cat", "n"))
+
+### Yilin file path
+#cps2018age <- read_delim("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_age.txt", delim="|",
+                       #col_names = c("cat", "n"))
+
+
+cps2018age <- read_delim("cps2018_crosstabs_age.txt", delim="|",
+                         col_names = c("cat", "n"))
 cps2018age$prop <- as.numeric(gsub(",", "", cps2018age$n))/323156
 cps2018age$cat <- as.factor(cps2018age$cat)
 cps2018age$cat <- fct_collapse(cps2018age$cat,
@@ -116,8 +129,15 @@ agg_cps2018age <- cps2018age %>%
 # cps2018$value[cps2018$name == "professional school degree"] <- "Postgraduate"
 # cps2018$value[cps2018$name == "doctorate degree"] <- "Postgraduate"
 # cps2018$value[cps2018$name == "niu or blank"] <- "N/A"
-cps2018educ <- read_delim("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_educ.txt", delim="|",
-                       col_names = c("cat", "n"))
+
+
+### Yilin file path
+#cps2018educ <- read_delim("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_educ.txt", delim="|",
+                       #col_names = c("cat", "n"))
+
+
+cps2018educ <- read_delim("cps2018_crosstabs_educ.txt", delim="|",
+                col_names = c("cat", "n"))
 cps2018educ$prop <- cps2018educ$n/sum(cps2018educ$n)
 cps2018educ$cat <- as.factor(cps2018educ$cat)
 cps2018educ$cat <- fct_collapse(cps2018educ$cat,
@@ -145,7 +165,14 @@ agg_cps2018educ <- cps2018educ %>%
     summarise(prop=sum(prop))
 
 ## income
-cps2018inc_f <- readLines("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_income.txt")
+
+
+### Yilin file path
+#cps2018inc_f <- readLines("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_income.txt")
+
+
+
+cps2018inc_f <- readLines("cps2018_crosstabs_income.txt")
 cps2018inc <- data.frame(
     cat = strsplit(cps2018inc_f[1], split="\t")[[1]],
     n = strsplit(cps2018inc_f[2], split="\t")[[1]]

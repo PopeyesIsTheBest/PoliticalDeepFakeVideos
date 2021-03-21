@@ -206,3 +206,198 @@ stargazer(h1.m,
           label = "firststage_deception",
           out="tables/firststage_deception.tex")
 
+
+#####------------------------------------------------------#
+##### Table 20 H8 and H9: Accuracy salience/diglit and detection accuracy ####
+#####------------------------------------------------------#
+
+## @SB: accuracy prompts don't increase accuracy
+(h8.m <- lm(exp_2_pct_correct ~ exp_2_prompt_accuracy, dat, weights=weight)); 
+
+## @SB: statistically significant and positive effect of digital literacy
+##      on performance
+(h9.m <- lm(exp_2_pct_correct ~ post_dig_lit, dat)); 
+(h89.corr.adj <- lm(exp_2_pct_correct ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                        exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief))); summary(h89.corr.adj);
+(h89.corr.adj.wt <- lm(exp_2_pct_correct ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                           exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief), weights=weight)); summary(h89.corr.adj);
+(h89.corr.adj.hq <- lm(exp_2_pct_correct ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                           exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief)%>%filter(!lowq))); summary(h89.corr.adj);
+(h89.corr.adj.hq.wt <- lm(exp_2_pct_correct ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                              exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief)%>%filter(!lowq), weights=weight)); summary(h89.corr.adj);
+
+
+
+var_order <- names(coefficients(h89.corr.adj))[2:19]
+stargazer(h8.m,
+          h9.m,
+          h89.corr.adj,
+          h89.corr.adj.wt,
+          h89.corr.adj.hq,
+          h89.corr.adj.hq.wt,
+          header = FALSE,
+          no.space=TRUE,
+          digits=2,
+          table.layout ="=d#-t-a-s=n",
+          notes.align = "l",
+          title="\\textbf{Predictors of Second-Stage Detection Accuracy}",
+          notes = c("\\textit{Notes}: Reference category for environment is High-fake. Reference category for age group is 18-24. PID pooled for brevity."),
+          omit = c("response_wave_ID"), 
+          dep.var.labels = c("\\normalsize Detection Accuracy (\\% Correctly Classified)"),
+          omit.stat=c("f", "ser"),
+          order = var_order,
+          covariate.labels = c(
+              "Digital Literacy",
+              "Accuracy Prompt",
+              "Stage 1 Debrief",
+              "Stage 1 Info Provided",
+              "Political Knowledge",
+              "Internet Usage",
+              "Low-fake Env.",
+              "No-fake Env.",
+              "Age groups 25-34",
+              "Age groups 35-44",
+              "Age groups 45-64",
+              "Age groups 65+",
+              "High School",
+              "College",
+              "Postgrad",
+              "Republican",
+              "CRT",
+              "Republican x CRT",
+              "Ambivalent Sexism"
+          ),
+          add.lines = list(c("Weighted?", "", "", "", "\\checkmark", "","\\checkmark"),
+                           c("Low-Quality Dropped?", "", "", "", "","\\checkmark","\\checkmark")),
+          column.sep.width = "1pt",
+          font.size = "footnotesize",
+          style = "apsr",
+          label="secondstage_accuracy",
+          out="tables/secondstage_accuracy.html")
+
+
+#####------------------------------------------------------#
+##### Table 21 Predictors of Second-Stage False Positive Rate (FPR) ####
+#####------------------------------------------------------#
+## regression tables on FPR
+(h8.m.fpr <- lm(exp_2_pct_false_fake ~ exp_2_prompt_accuracy, dat, weights=weight)); 
+(h9.m.fpr <- lm(exp_2_pct_false_fake ~ post_dig_lit, dat));
+(h89.corr.adj.fpr <- lm(exp_2_pct_false_fake ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                            exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief))); 
+(h89.corr.adj.wt.fpr <- lm(exp_2_pct_false_fake ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                               exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief), weights=weight)); 
+(h89.corr.adj.hq.fpr <- lm(exp_2_pct_false_fake ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                               exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief)%>%filter(!lowq))); 
+(h89.corr.adj.hq.wt.fpr <- lm(exp_2_pct_false_fake ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                                  exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief)%>%filter(!lowq), weights=weight)); 
+
+var_order <- names(coefficients(h89.corr.adj.fpr))[2:19]
+stargazer(h8.m.fpr,
+          h9.m.fpr,
+          h89.corr.adj.fpr,
+          h89.corr.adj.wt.fpr,
+          h89.corr.adj.hq.fpr,
+          h89.corr.adj.hq.wt.fpr,
+          header = FALSE,
+          no.space=TRUE,
+          digits=2,
+          table.layout ="=d#-t-a-s=n",
+          notes.align = "l",
+          title="\\textbf{Predictors of Second-Stage False Positive Rate (FPR)}",
+          notes = c("\\textit{Notes}: Reference category for environment is High-fake. Reference category for age group is 18-24. PID pooled for brevity."),
+          omit = c("response_wave_ID"), 
+          dep.var.labels = c("\\normalsize Detection FPR (\\% Real Videos Classified as Deepfakes)"),
+          omit.stat=c("f", "ser"),
+          order = var_order,
+          covariate.labels = c(
+              "Digital Literacy",
+              "Accuracy Prompt",
+              "Stage 1 Debrief",
+              "Stage 1 Info Provided",
+              "Political Knowledge",
+              "Internet Usage",
+              "Low-fake Env.",
+              "No-fake Env.",
+              "Age groups 25-34",
+              "Age groups 35-44",
+              "Age groups 45-64",
+              "Age groups 65+",
+              "High School",
+              "College",
+              "Postgrad",
+              "Republican",
+              "CRT",
+              "Republican x CRT",
+              "Ambivalent Sexism"
+          ),
+          add.lines = list(c("Weighted?", "", "", "", "\\checkmark", "","\\checkmark"),
+                           c("Low-Quality Dropped?", "", "", "", "","\\checkmark","\\checkmark")),
+          column.sep.width = "1pt",
+          font.size = "footnotesize",
+          style = "apsr",
+          label="secondstage_fpr",
+          out="tables/secondstage_fpr.html")
+
+
+#####------------------------------------------------------#
+##### Table 22 Predictors of Second-Stage False Negative Rate (FNR) ####
+#####------------------------------------------------------#
+## regression tables on FNR
+(h8.m.fnr <- lm(exp_2_pct_false_real ~ exp_2_prompt_accuracy, dat, weights=weight)); 
+(h9.m.fnr <- lm(exp_2_pct_false_real ~ post_dig_lit, dat)); 
+(h89.corr.adj.fnr <- lm(exp_2_pct_false_real ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                            exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief)));
+(h89.corr.adj.wt.fnr <- lm(exp_2_pct_false_real ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                               exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief), weights=weight)); 
+(h89.corr.adj.hq.fnr <- lm(exp_2_pct_false_real ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                               exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief)%>%filter(!lowq))); 
+(h89.corr.adj.hq.wt.fnr <- lm(exp_2_pct_false_real ~ post_dig_lit + exp_2_prompt_accuracy + exp_2_before_debrief + exp_1_prompt_info + polknow + internet_usage +
+                                  exp_2 + response_wave_ID + agegroup + educ + I(PID=="Republican")*crt + ambivalent_sexism, dat%>%mutate(exp_2_before_debrief=!exp_2_after_debrief)%>%filter(!lowq), weights=weight)); 
+
+var_order <- names(coefficients(h89.corr.adj.fnr))[2:19]
+stargazer(h8.m.fnr,
+          h9.m.fnr,
+          h89.corr.adj.fnr,
+          h89.corr.adj.wt.fnr,
+          h89.corr.adj.hq.fnr,
+          h89.corr.adj.hq.wt.fnr,
+          header = FALSE,
+          no.space=TRUE,
+          digits=2,
+          table.layout ="=d#-t-a-s=n",
+          notes.align = "l",
+          title="\\textbf{Predictors of Second-Stage False Negative Rate (FNR)}",
+          notes = c("\\textit{Notes}: Reference category for environment is High-fake. Reference category for age group is 18-24. PID pooled for brevity."),
+          omit = c("response_wave_ID"), 
+          dep.var.labels = c("\\normalsize Detection FNR (\\% Deepfakes Classified as Real Videos)"),
+          omit.stat=c("f", "ser"),
+          order = var_order,
+          covariate.labels = c(
+              "Digital Literacy",
+              "Accuracy Prompt",
+              "Stage 1 Debrief",
+              "Stage 1 Info Provided",
+              "Political Knowledge",
+              "Internet Usage",
+              "Low-fake Env.",
+              "No-fake Env.",
+              "Age groups 25-34",
+              "Age groups 35-44",
+              "Age groups 45-64",
+              "Age groups 65+",
+              "High School",
+              "College",
+              "Postgrad",
+              "Republican",
+              "CRT",
+              "Republican x CRT",
+              "Ambivalent Sexism"
+          ),
+          add.lines = list(c("Weighted?", "", "", "", "\\checkmark", "","\\checkmark"),
+                           c("Low-Quality Dropped?", "", "", "", "","\\checkmark","\\checkmark")),
+          column.sep.width = "1pt",
+          font.size = "footnotesize",
+          style = "apsr",
+          label="secondstage_fnr",
+          out="tables/secondstage_fnr.html")
+
