@@ -150,19 +150,32 @@ n <- dat %>%
     filter(!(treat%in%c("ad","control")), !is.na(treat), exp_1_prompt_control==T, !is.na(believed_true)) %>% nrow()
 
 ## difference-in-means
-(h1.m <- lm(believed_true ~ treat, dat %>% filter(treat != "ad",exp_1_prompt_control==T))); summary(h1.m);
-(h1.m.wt <- lm(believed_true ~ treat, dat %>% filter(treat != "ad",exp_1_prompt_control==T), weights=weight)); summary(h1.m.wt); 
-(h1.m.hq <- lm(believed_true ~ treat, dat %>% filter(treat != "ad",exp_1_prompt_control==T, !lowq))); summary(h1.m.hq); 
+(h1.m <- lm(believed_true ~ agegroup, dat %>% filter(treat != "ad",exp_1_prompt_control==T))); summary(h1.m);
+(h1.m.wt <- lm(believed_true ~ agegroup, dat %>% filter(treat != "ad",exp_1_prompt_control==T), weights=weight)); summary(h1.m.wt); 
+(h1.m.hq <- lm(believed_true ~ agegroup, dat %>% filter(treat != "ad",exp_1_prompt_control==T, !lowq))); summary(h1.m.hq); 
 
 # convert the age group to factors
 dat<- dat %>% 
     mutate(agegroup = as.factor(agegroup))
 
+### non-parametric tests
+t.test(na.omit(dat$believed_true[dat$agegroup == "18-24"]), 
+       na.omit(dat$believed_true[dat$agegroup == "25-34"]))
+
+t.test(na.omit(dat$believed_true[dat$agegroup == "18-24"]), 
+       na.omit(dat$believed_true[dat$agegroup == "35-44"]))
+
+t.test(na.omit(dat$believed_true[dat$agegroup == "18-24"]), 
+       na.omit(dat$believed_true[dat$agegroup == "45-64"]))
+
+t.test(na.omit(dat$believed_true[dat$agegroup == "18-24"]), 
+       na.omit(dat$believed_true[dat$agegroup == "65+"]))
+
 ## adjustments
-(h1.m.adj <- lm(believed_true ~ treat + meta_OS + agegroup + educ + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat %>% filter(!is.na(treat),treat != "ad",exp_1_prompt_control==T))); summary(h1.m.adj);
-(h1.m.adj.wt <- lm(believed_true ~ treat + meta_OS + agegroup + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat %>% filter(!is.na(treat),treat != "ad",exp_1_prompt_control==T), weights=weight)); summary(h1.m.adj.wt);
-(h1.m.adj.hq <- lm(believed_true ~ treat + meta_OS + agegroup + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat %>% filter(!is.na(treat),treat != "ad",exp_1_prompt_control==T,!lowq))); summary(h1.m.adj.hq);
-(h1.m.adj.wt.hq <- lm(believed_true ~ treat + meta_OS + agegroup + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat %>% filter(!is.na(treat),treat != "ad",exp_1_prompt_control==T,!lowq), weights=weight)); summary(h1.m.adj.wt.hq);
+(h1.m.adj <- lm(believed_true ~ agegroup + meta_OS + treat + educ + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat %>% filter(!is.na(treat),treat != "ad",exp_1_prompt_control==T))); summary(h1.m.adj);
+(h1.m.adj.wt <- lm(believed_true ~ agegroup + meta_OS + treat + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat %>% filter(!is.na(treat),treat != "ad",exp_1_prompt_control==T), weights=weight)); summary(h1.m.adj.wt);
+(h1.m.adj.hq <- lm(believed_true ~ agegroup + meta_OS + treat + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat %>% filter(!is.na(treat),treat != "ad",exp_1_prompt_control==T,!lowq))); summary(h1.m.adj.hq);
+(h1.m.adj.wt.hq <- lm(believed_true ~ agegroup + meta_OS + treat + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat %>% filter(!is.na(treat),treat != "ad",exp_1_prompt_control==T,!lowq), weights=weight)); summary(h1.m.adj.wt.hq);
 
 ### regression tables
 stargazer(h1.m,
@@ -182,15 +195,16 @@ stargazer(h1.m,
                     "sexism are 0-1, internet usage is 1-7. Sample did not receive information in the first stage."),
           add.lines = list(c("Weighted?", "", "\\checkmark", "", "", "\\checkmark","","\\checkmark"),
                            c("Low-Quality Dropped?","","","\\checkmark","","","\\checkmark","\\checkmark")),
-          covariate.labels = c("Audio",
-                               "Text",
-                               "Skit",
-                               # "Attack Ad",
-                               "On Mobile",
-                               "Age 25-34",
+          covariate.labels = c("Age 25-34",
                                "Age 35-44",
                                "Age 45-64",
                                "Age 65+ ",
+                             
+                               # "Attack Ad",
+                               "On Mobile",
+                               "Audio",
+                               "Text",
+                               "Skit",
                                "High School", "College", "Postgrad",
                                "Independent PID", "Republican PID",
                                "CRT",
