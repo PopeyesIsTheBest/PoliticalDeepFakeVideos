@@ -1,7 +1,6 @@
 ############################################################
 # Weight data to be more representative of national population.
 # 
-# Author: Soubhik Barari
 # 
 # Environment:
 # - must use R 3.6
@@ -9,34 +8,26 @@
 # Runtime: ~few seconds
 # 
 # Input:
-# - code/cps2018_crosstabs*
-# - code/deepfake.RData
+# - inputs/cps2018_crosstabs*
+# - inputs/deepfake.RData
 #
 # Output:
-# - code/deepfake.RData
+# - inputs/deepfake.RData
 ############################################################
 
 library(tidyverse)
 library(survey)
 library(stargazer)
 library(weights)
+library(dplyr)
 
-
-
-### Yilin file path
-#load("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/deepfake.RData")
-
-load("deepfake.RData")
+load("inputs/deepfake.RData")
 
 #####------------------------------------------------------#
 #####  Aggregate/clean CPS 2018 ####
 #####------------------------------------------------------#
 
-### Yilin file path
-#cps2018_ <- readRDS("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs.rds")
-
-
-cps2018_ <- readRDS("cps2018_crosstabs.rds")
+cps2018_ <- readRDS("inputs/cps2018_crosstabs.rds")
 cps2018 <- cps2018_
 cps2018$value <- cps2018$name
 
@@ -62,20 +53,8 @@ cps2018 <- cps2018 %>%
     mutate(value = ifelse(name == "not hispanic", "Not Hispanic", 
                         ifelse(variable == "hispan", "Hispanic", value)))
 
-## age
-# cps2018$value[cps2018$name == "18 to 24 years"] <- "18-24"
-# cps2018$value[cps2018$name == "25 to 34 years"] <- "25-34"
-# cps2018$value[cps2018$name == "35 to 44 years"] <- "35-44"
-# cps2018$value[cps2018$name == "45 to 64 years"] <- "45-64"
-# cps2018$value[cps2018$name == "65 years and over"] <- "65+"
-# cps2018$value[cps2018$variable == "age" & is.na(cps2018$name)] <- "N/A"
 
-### Yilin file path
-#cps2018age <- read_delim("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_age.txt", delim="|",
-                       #col_names = c("cat", "n"))
-
-
-cps2018age <- read_delim("cps2018_crosstabs_age.txt", delim="|",
+cps2018age <- read_delim("inputs/cps2018_crosstabs_age.txt", delim="|",
                          col_names = c("cat", "n"))
 cps2018age$prop <- as.numeric(gsub(",", "", cps2018age$n))/323156
 cps2018age$cat <- as.factor(cps2018age$cat)
@@ -111,32 +90,8 @@ agg_cps2018age <- cps2018age %>%
     group_by(cat) %>%
     summarise(prop=sum(prop))
 
-## educ
-# cps2018$value[cps2018$name == "none or preschool"] <- "<High school"
-# cps2018$value[cps2018$name == "grades 1, 2, 3, or 4"] <- "<High school"
-# cps2018$value[cps2018$name == "grades 5 or 6"] <- "<High school"
-# cps2018$value[cps2018$name == "grades 7 or 8"] <- "<High school"
-# cps2018$value[cps2018$name == "grade 9"] <- "<High school"
-# cps2018$value[cps2018$name == "grade 10"] <- "<High school"
-# cps2018$value[cps2018$name == "grade 11"] <- "<High school"
-# cps2018$value[cps2018$name == "12th grade, no diploma"] <- "<High school"
-# cps2018$value[cps2018$name == "high school diploma or equivalent"] <- "High school"
-# cps2018$value[cps2018$name == "some college but no degree"] <- "High school"
-# cps2018$value[cps2018$name == "associate's degree, occupational/vocational program"] <- "College"
-# cps2018$value[cps2018$name == "associate's degree, academic program"] <- "College"
-# cps2018$value[cps2018$name == "bachelor's degree"] <- "College"
-# cps2018$value[cps2018$name == "master's degree"] <- "Postgraduate"
-# cps2018$value[cps2018$name == "professional school degree"] <- "Postgraduate"
-# cps2018$value[cps2018$name == "doctorate degree"] <- "Postgraduate"
-# cps2018$value[cps2018$name == "niu or blank"] <- "N/A"
 
-
-### Yilin file path
-#cps2018educ <- read_delim("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_educ.txt", delim="|",
-                       #col_names = c("cat", "n"))
-
-
-cps2018educ <- read_delim("cps2018_crosstabs_educ.txt", delim="|",
+cps2018educ <- read_delim("inputs/cps2018_crosstabs_educ.txt", delim="|",
                 col_names = c("cat", "n"))
 cps2018educ$prop <- cps2018educ$n/sum(cps2018educ$n)
 cps2018educ$cat <- as.factor(cps2018educ$cat)
@@ -166,13 +121,7 @@ agg_cps2018educ <- cps2018educ %>%
 
 ## income
 
-
-### Yilin file path
-#cps2018inc_f <- readLines("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/cps2018_crosstabs_income.txt")
-
-
-
-cps2018inc_f <- readLines("cps2018_crosstabs_income.txt")
+cps2018inc_f <- readLines("inputs/cps2018_crosstabs_income.txt")
 cps2018inc <- data.frame(
     cat = strsplit(cps2018inc_f[1], split="\t")[[1]],
     n = strsplit(cps2018inc_f[2], split="\t")[[1]]
@@ -417,5 +366,5 @@ dat$weight[is.na(dat$weight)] <- 0
 
 ## update data file
 save(dat, dfsurvdat, nofake_vids, lowfake_vids, hifake_vids, 
-     file = "~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/deepfake.RData")
+     file = "inputs/deepfake.RData")
 
