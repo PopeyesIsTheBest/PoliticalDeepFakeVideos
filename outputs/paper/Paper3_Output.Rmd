@@ -6,11 +6,12 @@ abstract: ""
 output: 
   bookdown::pdf_document2:
     latex_engine: xelatex
-    toc: FALSE
+    toc: TRUE
 header-includers:
 -  \usepackage{caption}
 -  \usepackage{multirow}
 bibliography: references.bib
+thanks: 'Code and Data are available at: https://github.com/PopeyesIsTheBest/PoliticalDeepFakeVideos.git'
 ---
 
 ```{r setup, include=FALSE}
@@ -81,104 +82,23 @@ In the detection experiment, the key model [@citelit1] we use to test the effect
 \newpage
 
 # Results
-```{r, echo = FALSE, warning=FALSE,regfloat=TRUE}
-load(here::here("inputs/deepfake.RData"))
-colorscheme <- scale_fill_manual(values=c("#C77CFF","#00BFC4","#7CAE00","#F8766D"))
 
-### diff-in-means
-panel1 <- dat %>% filter(treat != "ad", treat != "control") %>%
-    mutate(treat = fct_relevel(treat, "skit","audio","text","video")) %>%
-    group_by(treat) %>% summarise(estimate=mean(believed_true, na.rm=T), std.error=sd(believed_true, na.rm=T)/sqrt(n())) %>%
-    mutate(panel="All\n") %>%
-    ggplot(aes(x=treat, y=estimate, ymin=estimate-1.96*std.error, ymax=estimate+1.96*std.error)) +
-    geom_segment(x=0, xend=4.5, 
-                 y=mean(dat$believed_true[!(dat$treat %in% c("ad","control","skit"))], na.rm=T),
-                 yend=mean(dat$believed_true[!(dat$treat %in% c("ad","control","skit"))], na.rm=T), 
-               size=2, lty=1, color="red", inherit.aes = F) +
-    geom_pointrange(aes(shape=treat, fill=treat), position=position_dodge(width=.9), color="black", size=1, stroke=.5) +
-    geom_text(aes(group=treat, label=treat, y=estimate+1.96*std.error+0.2), position=position_dodge(width=.9), size=4) +
-    scale_shape_manual(values=c(21,22,23,24)) +
-    facet_grid(panel ~ .) + 
-    scale_x_discrete(expand=c(0.2,0.2)) + colorscheme +
-    ylab("") + xlab("") + theme_linedraw() + coord_flip(ylim=c(1,5)) +
-    theme(title = element_text(size=5),
-          legend.position = "none",
-          axis.title.y = element_text(size=16),
-          axis.ticks.y = element_blank(),
-          axis.text.y = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          strip.text = element_text(size=16),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank(),
-          axis.title.x = element_text(size=14, hjust=0))
-
-dd <- bind_rows(
-    dat %>% filter(!is.na(agegroup)) %>% filter(treat != "ad", treat !="control") %>%
-        mutate(agegroup = as.factor(agegroup)) %>%
-        mutate(treat = as.character(treat)) %>%
-        mutate(treat = fct_relevel(treat, "skit","audio","text","video")) %>%
-        group_by(agegroup,treat) %>%
-        summarise(estimate=mean(believed_true, na.rm=T), std.error=sd(believed_true, na.rm=T)/sqrt(n())) %>%
-        rename(group=agegroup) %>% mutate(type="By Age\nGroup"))
-
-dd$group <- as_factor(dd$group)
-    
-panel3 <- dd %>%
-    ggplot(aes(x=group, y=estimate, ymin=estimate-1.96*std.error, ymax=estimate+1.96*std.error)) +
-    # geom_bar(aes(fill=treat), position=position_dodge(width=.9), color="black", stat="identity") +
-    # geom_errorbar(aes(group=treat), position=position_dodge(width=.9), width=.2, size=1) +
-    scale_shape_manual(values=c(21,22,23,24)) +
-    geom_segment(data = dd %>% 
-                     filter(treat != "skit") %>% 
-                     group_by(type, treat) %>% mutate(group_x=1:n()) %>% ungroup() %>%
-                     group_by(type,group,group_x) %>% 
-                     summarise(yint=mean(estimate)),
-               aes(x=group_x-.5, xend=group_x+.5, y=yint, yend=yint), 
-               size=2, lty=1, color="red", inherit.aes = F) +
-    geom_vline(aes(xintercept=1.5), lty=2, color="grey", alpha=0.8) +
-    geom_vline(aes(xintercept=2.5), lty=2, color="grey", alpha=0.8) +
-    geom_vline(aes(xintercept=3.5), lty=2, color="grey", alpha=0.8) +
-    geom_vline(aes(xintercept=4.5), lty=2, color="grey", alpha=0.8) +
-    geom_pointrange(aes(shape=treat, fill=treat), position=position_dodge(width=.9), color="black", size=1, stroke=.5) +
-    geom_text(aes(group=treat, label=treat, y=estimate+1.96*std.error+0.2), position=position_dodge(width=.9), size=4) +
-    facet_grid(type ~ ., space="free", scales="free") +
-    scale_x_discrete(expand=c(0.2,0.2)) + colorscheme +
-    ylab("mean level of deception in group (95% CI)") + xlab("") + coord_flip(ylim=c(1,5)) + theme_linedraw() +
-    theme(title = element_text(size=5),
-          legend.position = "none",
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          strip.text = element_text(size=15),
-          axis.text.y = element_text(size=14),
-          axis.ticks.y = element_blank(),
-          axis.text.x = element_text(size=12),
-          axis.title.x = element_text(size=18))
-
-pp <- cowplot::plot_grid(panel1, panel3, nrow = 8,
-                         align="v",rel_heights = c(0.3, 1))
-
-
-cowplot::save_plot("figures/topline_exp1_a.pdf", plot = pp, base_height=25.5, base_width=8)
-```
-
-
-```{r fig01, fig.cap="Marginal Means in Exposure Experiment Deception Outcomes",echo = FALSE, warning=FALSE,regfloat=TRUE}
-knitr::include_graphics(path = ("figures/topline_exp1_a.pdf"))
+```{r fig01, fig.cap="Marginal Means in Exposure Experiment Deception Outcomes", echo = FALSE, warning=FALSE, fig.align = "center", out.width="80%",fig.width=10, fig.height=40, regfloat=TRUE}
+knitr::include_graphics(here::here("figures/topline_exp1_a.pdf"))
 ```
 
 \@ref(fig:fig01)) shows the mean level of deception in each age group where the outcome is the extent of believing the clipping is fake or doctored, on a scale of 1-5. The p-values are respectively 0.392, 0.7338, 0.8289, and 0.8863 when we compare the 18-24 age group with age 25-34, age 35-44, age 45-64, and age 65+.  Finally the regression results of extent of belief on age groups and covariates are presented in [ref: Table 1].
 
-```{r fig02, fig.cap="Marginal Means in Exposure Experiment Affect Outcomes",echo = FALSE, warning=FALSE,regfloat=TRUE}
+```{r fig02, fig.cap="Marginal Means in Exposure Experiment Affect Outcomes",echo = FALSE, warning=FALSE, fig.align = "center", out.width="80%",fig.width=10, fig.height=40, regfloat=TRUE}
 
-knitr::include_graphics(path = "figures/topline_exp1_b_2.pdf")
+#knitr::include_graphics(here::here("figures/topline_exp1_b_2.pdf"))
 ```
 
 We then want to examine the favorability heterogeneity for different subgroups. From the topline null results shown in the \@ref(fig:fig02)), we can see that young respondents are easier to be affectively triggered by fake clippings than participants aging between 25 and 44, especially presenting a significant difference with the 35-44 age subgroup ($\delta$ = -8.66, $t$= -12.16, $p$ value <0.05). The results also indicate the same finding with what authors have investigated, showing that the elderly are more likely to be affectively triggered by the inveracious media clippings than the young people ($\delta$ =3.42, $t$ =2.0196, $p$ value <0.05). The results regression model [Table 2] also shows the same insights.
 
 ##Detection experiment results
-```{r fig03, fig.cap='Marginal Means in Detection Experiment Outcomes',echo = FALSE, warning=FALSE,regfloat=TRUE}
-knitr::include_graphics(path = "figures/topline_exp2.pdf")
+```{r fig03, fig.cap='Marginal Means in Detection Experiment Outcomes',echo = FALSE, warning=FALSE, fig.align = "center", regfloat=TRUE}
+knitr::include_graphics(here::here("figures/topline_exp2.pdf"))
 ```
 
 
