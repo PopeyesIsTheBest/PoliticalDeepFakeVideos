@@ -1,7 +1,6 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Run through pre-registered analyses on deepfake studies.
 # 
-# Author: Soubhik Barari
 # 
 # Environment:
 # - must use R 3.6
@@ -9,7 +8,7 @@
 # Runtime: <1 min
 # 
 # Input:
-# - code/deepfake.Rdata:
+# - inputs/deepfake.Rdata:
 #       contains `dat` object with weights appended to a 
 #       column from step 1.
 #
@@ -24,9 +23,7 @@ library(ggplot2)
 library(broom)
 library(stargazer)
 
-rm(list=ls())
-setwd("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main")
-load("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/deepfake.Rdata")
+load("inputs/deepfake.Rdata")
 
 if (!file.exists("tables")) {
     system("mkdir tables")
@@ -59,17 +56,6 @@ SHOW_PDFS <- ARGS$show_pdfs
 
 dat$lowq <- FALSE
 dat$lowq[dat$quality_pretreat_duration_tooquick | dat$quality_pretreat_duration_tooslow | dat$quality_demographic_mismatch] <- TRUE
-
-# if (ARGS$response_quality == "low") {
-#     dat <- dat[dat$quality_pretreat_duration_tooquick | dat$quality_pretreat_duration_tooslow | dat$quality_demographic_mismatch,] ## cond on low quality
-# }
-#
-# if (ARGS$response_quality == "high") {
-#     dat <- dat[!dat$quality_pretreat_duration_tooquick & !dat$quality_pretreat_duration_tooslow & !dat$quality_demographic_mismatch,] ## cond on high quality
-# }
-# if (ARGS$weight == 0 | !("weight" %in% colnames(dat))) {
-#     dat$weight <- 1
-# }
 
 #####------------------------------------------------------#
 ##### Helpers ####
@@ -220,6 +206,66 @@ stargazer(h1.m,
           label = "firststage_deception",
           out="tables/firststage_deception.tex")
 
+##### H2_2_Agegroup: Deepfakes make target more unfavorable than text/audio/skit  #### (Max)
+#####------------------------------------------------------#
+
+n <- dat %>%
+    filter(!is.na(treat), !is.na(post_favor_Warren)) %>%
+    filter(exp_1_prompt_control==T) %>% nrow()
+
+
+### regression tables
+(h2_2.m <- lm(post_favor_Warren ~ agegroup, dat)); summary(h2_2.m);
+(h2_2.m.wt <- lm(post_favor_Warren ~ agegroup, dat, weights=weight)); summary(h2_2.m.wt);
+(h2_2.m.hq <- lm(post_favor_Warren ~ agegroup, dat %>% filter(!lowq))); summary(h2_2.m.hq);
+(h2_2.m.adj <- lm(post_favor_Warren ~ agegroup + response_wave_ID + exp_1_prompt + meta_OS + treat + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat)); summary(h2_2.m.adj);
+(h2_2.m.adj.wt <- lm(post_favor_Warren ~ agegroup + response_wave_ID + exp_1_prompt + meta_OS + treat + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat, weights=weight)); summary(h2_2.m.adj.wt);
+(h2_2.m.adj.hq <- lm(post_favor_Warren ~ agegroup + response_wave_ID + exp_1_prompt + meta_OS + treat + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat%>%filter(!lowq))); summary(h2_2.m.adj.hq);
+(h2_2.m.adj.hq.wt <- lm(post_favor_Warren ~ agegroup + response_wave_ID + exp_1_prompt + meta_OS + treat + educ + PID + crt + I(gender=="Male") + polknow + internet_usage + ambivalent_sexism, dat%>%filter(!lowq), weights=weight)); summary(h2_2.m.adj.hq.wt);
+
+stargazer(h2_2.m, 
+          h2_2.m.wt,
+          h2_2.m.hq,
+          h2_2.m.adj,
+          h2_2.m.adj.wt,
+          h2_2.m.adj.hq,
+          h2_2.m.adj.hq.wt,
+          header = FALSE,
+          no.space=TRUE,
+          digits=2,
+          table.layout ="=d#-t-a-s=n",
+          notes.align = "l",
+          title="\\textbf{Models of Scandal Target Affect}",
+          omit = "response_wave_ID",
+          add.lines = list(c("Weighted?", "", "\\checkmark", "", "", "\\checkmark","","\\checkmark"),
+                           c("Low-Quality Dropped?","","","\\checkmark","","","\\checkmark","\\checkmark")),
+          notes = c("\\textit{Notes}: Reference category for medium is Control."),
+          covariate.labels = c("Age 25-34",
+                               "Age 35-44",
+                               "Age 45-64",
+                               "Age 65+",
+                               "Info Provided",
+                               "On Mobile",
+                               "Video",
+                               "Audio",
+                               "Text",
+                               "Skit",
+                               "Attack Ad",
+                               "High School", "College", "Postgrad",
+                               "Independent PID", "Republican PID",
+                               "CRT",
+                               "Male",
+                               "Political Knowledge",
+                               "Internet Usage",
+                               "Ambivalent Sexism"),
+          dep.var.labels = c("\\normalsize Elizabeth Warren Feeling Thermometer"),
+          omit.stat=c("f", "ser"),
+          column.sep.width = "-2pt",
+          font.size = "footnotesize",
+          style = "apsr",
+          label = "firststage_feelings",
+          out="tables/firststage_feelings2.tex")
+
 
 #####------------------------------------------------------#
 ##### Table 20 H8 and H9: Accuracy salience/diglit and detection accuracy ####
@@ -287,7 +333,7 @@ stargazer(h8.m,
           font.size = "footnotesize",
           style = "apsr",
           label="secondstage_accuracy",
-          out="tables/secondstage_accuracy.html")
+          out="tables/secondstage_accuracy.tex")
 
 
 #####------------------------------------------------------#
@@ -350,7 +396,7 @@ stargazer(h8.m.fpr,
           font.size = "footnotesize",
           style = "apsr",
           label="secondstage_fpr",
-          out="tables/secondstage_fpr.html")
+          out="tables/secondstage_fpr.tex")
 
 
 #####------------------------------------------------------#
@@ -413,5 +459,5 @@ stargazer(h8.m.fnr,
           font.size = "footnotesize",
           style = "apsr",
           label="secondstage_fnr",
-          out="tables/secondstage_fnr.html")
+          out="tables/secondstage_fnr.tex")
 

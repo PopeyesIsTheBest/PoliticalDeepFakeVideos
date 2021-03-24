@@ -110,8 +110,92 @@ panel3 <- dd %>%
 
 pp <- cowplot::plot_grid(panel1, panel3, nrow = 8,
                          align="v",rel_heights = c(0.3, 1))
+
+
 cowplot::save_plot("figures/topline_exp1_a.pdf", plot = pp, base_height=25.5, base_width=8)
 system("open figures/topline_exp1_a.pdf")
+
+
+##### Experiment 1: Stacked means -- affect #### Figure 2
+#####------------------------------------------------------#
+colorscheme <- scale_fill_manual(values=c("black","white","#C77CFF","#00BFC4","#7CAE00","#F8766D"))
+
+### diff-in-means
+panel1.b <- dat %>% filter(!is.na(treat)) %>%
+    mutate(treat = fct_relevel(treat, "ad","control","skit","audio","text","video")) %>%
+    group_by(treat) %>% summarise(estimate=mean(post_favor_Warren, na.rm=T), std.error=sd(post_favor_Warren, na.rm=T)/sqrt(n())) %>%
+    mutate(panel="All\n") %>%
+    ggplot(aes(x=treat, y=estimate, ymin=estimate-1.96*std.error, ymax=estimate+1.96*std.error)) +
+    geom_segment(x=0, xend=6.5, 
+                 y=mean(dat$post_favor_Warren[!(dat$treat %in% c("ad","control","skit"))], na.rm=T),
+                 yend=mean(dat$post_favor_Warren[!(dat$treat %in% c("ad","control","skit"))], na.rm=T), 
+                 size=2, lty=1, color="red", inherit.aes = F) +
+    geom_pointrange(aes(shape=treat, fill=treat), position=position_dodge(width=.9), color="black", size=.5, stroke=.5) +
+    geom_text(aes(group=treat, label=treat, y=estimate+1.96*std.error+2.7), position=position_dodge(width=.9), size=3) +
+    scale_shape_manual(values=c(8,25,21,22,23,24)) +
+    facet_grid(panel ~ .) + 
+    scale_x_discrete(expand=c(0.2,0.2)) + colorscheme +
+    ylab("") + xlab("") + theme_linedraw() + coord_flip(ylim=c(15,75)) +
+    theme(title = element_text(size=5),
+          legend.position = "none",
+          axis.title.y = element_text(size=16),
+          axis.ticks.y = element_blank(),
+          axis.text.y = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size=16),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.title.x = element_text(size=14, hjust=0))
+
+dd <- bind_rows(
+    dat %>% filter(!is.na(agegroup)) %>% filter(!is.na(treat)) %>%
+        mutate(agegroup= as.factor(agegroup))%>%
+        mutate(treat = as.character(treat)) %>%
+        mutate(treat = fct_relevel(treat, "ad","control","skit","audio","text","video")) %>%
+        group_by(agegroup,treat) %>%
+        summarise(estimate=mean(post_favor_Warren, na.rm=T), std.error=sd(post_favor_Warren, na.rm=T)/sqrt(n())) %>%
+        rename(group=agegroup) %>% mutate(type="By Age\nGroup")
+)
+
+
+dd= na.omit(dd)
+panel3.b <- dd %>%
+    filter(!is.na(group))%>%
+    ggplot(aes(x=group, y=estimate, ymin=estimate-1.96*std.error, ymax=estimate+1.96*std.error)) +
+    scale_shape_manual(values=c(8,25,21,22,23,24)) +
+    geom_segment(data = dd %>% 
+                     filter(treat != "skit") %>% 
+                     group_by(type, treat) %>% mutate(group_x=1:n()) %>% ungroup() %>%
+                     group_by(type,group,group_x) %>% 
+                     summarise(yint=mean(estimate)),
+                 aes(x=group_x-.5, xend=group_x+.5, y=yint, yend=yint), 
+                 size=2, lty=1, color="red", inherit.aes = F) +
+    geom_vline(aes(xintercept=0.5), lty=2, color="grey", alpha=0.8) +
+    geom_vline(aes(xintercept=2), lty=2, color="grey", alpha=0.8) +
+    geom_vline(aes(xintercept=3.5), lty=2, color="grey", alpha=0.8) +
+    geom_vline(aes(xintercept=4.75), lty=2, color="grey", alpha=0.8) +
+    geom_pointrange(aes(shape=treat, fill=treat), position=position_dodge(width=.9), color="black", size=1, stroke=.5) +
+    geom_text(aes(group=treat, label=treat, y=estimate+1.96*std.error+0.2), position=position_dodge(width=.9), size=4) +
+    facet_grid(type ~ ., space="free", scales="free") +
+    scale_x_discrete(expand=c(0.2,0.2)) + colorscheme +
+    ylab("mean feeling thermometer\ntowards Elizabeth Warren (95% CI)") + xlab("") + coord_flip(ylim=c(15,75)) + theme_linedraw() +
+    theme(title = element_text(size=5),
+          legend.position = "none",
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size=15),
+          axis.text.y = element_text(size=14),
+          axis.ticks.y = element_blank(),
+          axis.text.x = element_text(size=12),
+          axis.title.x = element_text(size=18))
+
+panel3.b
+
+pp.b <- cowplot::plot_grid(panel1.b, panel3.b,
+                           nrow=8, align="v", rel_heights = c(0.3,1))
+cowplot::save_plot("figures/topline_exp1_b_2.pdf", plot = pp.b, base_height=25.5, base_width=8)
+system("open figures/topline_exp1_b_2.pdf")
 
 
 #####------------------------------------------------------#
@@ -142,59 +226,11 @@ dd <- bind_rows(
         group_by(exp_2, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
         filter(!is.na(std.error)) %>% mutate(type="All", group="")
     ,
-    ## interventions
-    d %>% filter(!is.na(exp_2)) %>%
-        group_by(exp_2, exp_1_prompt, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
-        mutate(exp_1_prompt = as.character(exp_1_prompt)) %>%
-        mutate(exp_1_prompt = replace(exp_1_prompt, exp_1_prompt == "control", "Received\nno information")) %>%
-        mutate(exp_1_prompt = replace(exp_1_prompt, exp_1_prompt == "info", "Received\ninformation")) %>%
-        filter(!is.na(std.error)) %>% rename(group=exp_1_prompt) %>% mutate(type="By Intervention\nSubgroups")
-    ,
-    d %>% filter(!is.na(exp_2_after_debrief)) %>%
-        group_by(exp_2, exp_2_after_debrief, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
-        mutate(exp_2_after_debrief = as.character(exp_2_after_debrief)) %>%
-        mutate(exp_2_after_debrief = replace(exp_2_after_debrief, exp_2_after_debrief == "0", "Debriefed\nbefore task")) %>%
-        mutate(exp_2_after_debrief = replace(exp_2_after_debrief, exp_2_after_debrief == "1", "Debriefed\nafter task")) %>%
-        filter(!is.na(std.error)) %>% rename(group=exp_2_after_debrief) %>% mutate(type="By Intervention\nSubgroups")
-    ,
-    d %>% filter(!is.na(exp_2_prompt)) %>%
-        group_by(exp_2, exp_2_prompt, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
-        mutate(exp_2_prompt = as.character(exp_2_prompt)) %>%
-        mutate(exp_2_prompt = replace(exp_2_prompt, exp_2_prompt == "accuracy", "Received\naccuracy prime")) %>%
-        mutate(exp_2_prompt = replace(exp_2_prompt, exp_2_prompt == "control", "Received\nno accuracy prime")) %>%
-        filter(!is.na(std.error)) %>% rename(group=exp_2_prompt) %>% mutate(type="By Intervention\nSubgroups")
-    ,
     ## age
     d %>% filter(!is.na(agegroup)) %>%
         mutate(agegroup = as.factor(agegroup)) %>%
         group_by(exp_2, agegroup, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
         filter(!is.na(std.error), !is.na(agegroup)) %>% rename(group=agegroup) %>% mutate(type="By Age\nGroup") 
-    ,
-    ## knowledge
-    d %>% filter(!is.na(polknow)) %>%
-        mutate(polknow=cut(polknow, breaks=polknow_quantile, 
-                           labels=c("Less \nknowledge", "More \nknowledge"))) %>%
-        group_by(exp_2, polknow, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
-        filter(!is.na(std.error)) %>% rename(group=polknow) %>% mutate(type="By Pol.\nKnowledge")
-    ,
-    ## dig-lit
-    d %>% filter(!is.na(post_dig_lit)) %>%
-        mutate(post_dig_lit=cut(post_dig_lit, breaks=diglit_quantile, 
-                                labels=c("Low digital\nliteracy", "Moderate digital\nliteracy","High digital\nliteracy"))) %>%
-        group_by(exp_2, post_dig_lit, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
-        filter(!is.na(std.error), !is.na(post_dig_lit)) %>% rename(group=post_dig_lit) %>% mutate(type="By Digital\nLiteracy")
-    ,
-    ## CR
-    d %>% filter(!is.na(crt)) %>%
-        mutate(crt=cut(crt, breaks=c(-1,0,.34,1.1), 
-                       labels=c("Low\nreflection", "Moderate\nreflection", "High\nreflection"))) %>%
-        group_by(exp_2, crt, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
-        filter(!is.na(std.error), !is.na(crt)) %>% rename(group=crt) %>% mutate(type="By Cognitive\nReflection") 
-    ,
-    ## PID
-    d %>% filter(!is.na(PID)) %>%
-        group_by(exp_2, PID, metric) %>% summarise(estimate=mean(val, na.rm=T), std.error=sd(val, na.rm=T)/sqrt(n())) %>%
-        filter(!is.na(std.error), !is.na(PID)) %>% rename(group=PID) %>% mutate(type="By Partisan\nIdentity") 
 )
 
 dd$group <- as_factor(dd$group)
@@ -210,8 +246,6 @@ pp <- dd %>%
     geom_vline(aes(xintercept=3.5), lty=2, color="grey", alpha=0.8) +
     geom_vline(aes(xintercept=4.5), lty=2, color="grey", alpha=0.8) +
     geom_vline(aes(xintercept=5.5), lty=2, color="grey", alpha=0.8) +
-    geom_vline(data = dd %>% filter(type=="By Intervention\nSubgroups"), aes(xintercept=4.5), lty=1, color="grey", alpha=1) +
-    geom_vline(data = dd %>% filter(type=="By Intervention\nSubgroups"), aes(xintercept=2.5), lty=1, color="grey", alpha=1) +
     # geom_vline(data = dd %>% filter(type=="By Knowledge\nSubgroups"), aes(xintercept=2.5), lty=1, color="grey", alpha=1) +
     geom_segment(data = dd %>%
                      group_by(metric,type,exp_2) %>% mutate(group_x=1:n()) %>% ungroup() %>%
@@ -238,5 +272,5 @@ pp <- dd %>%
           # axis.text.x = element_blank(),
           # axis.ticks.x = element_blank(),
           axis.title.x = element_text(size=14))
-ggsave("figures/topline_exp2.pdf", plot = pp, height=10.5, width=8)
-system("open figures/topline_exp2.pdf")
+ggsave("figures/Topline_exp2.pdf", plot = pp, height=10.5, width=8)
+system("open figures/Topline_exp2.pdf")

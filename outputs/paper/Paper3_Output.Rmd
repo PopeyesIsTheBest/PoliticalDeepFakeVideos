@@ -1,25 +1,554 @@
 ---
-title: "Paper3_Output"
-author: "Renjing Liu"
-date: "2021/3/21"
-output: html_document
+title: "Re-visiting the Political Deepfake Videos Misinformation the Public But No More than Other Fake Media (2021)"
+author: "Yilin Zhu, Jialin Zhao, Renjing Liu"
+date: "23/03/2021"
+abstract: ""
+output: 
+  bookdown::pdf_document2:
+    latex_engine: xelatex
+    toc: FALSE
+header-includers:
+-  \usepackage{caption}
+-  \usepackage{multirow}
+bibliography: references.bib
 ---
 
-```{r}
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#############################TESTING
+#### Workspace setup ####
+library(tinytex)
+library(tidyverse)
+library(tibble)
+library(ggplot2)
+library(bookdown)
+library(dplyr)
+library(cowplot)
+library(stargazer)
+library(knitr)
+```
+\newpage
+
+# Abstract
+
+# Introduction
+With the continuous development of Artificial intelligence and deep learning in scientific research and applications, technologies have greatly affected many aspects of our lives. Recently, the deepfake, a term derived from the combination of “deep learning” and “fake”, which leverages open-source deep learning technology to produce a kind of inveracious content, have been used to fabricate video and audio recordings of political elites around the world, showing and saying things they have never done. And some reports have reported these videos could even lead to a coup attempt, posing remarkable threats and potential harm on the political democracy [@citelit2]. Moreover, some also expressed concerns that deepfake technology may also undermine our ability to detect both honest and dishonest claims in the real word [@citelit3]. 
+
+Based on these impacts and concerns caused by deepfake, Soubhik Barari, Christopher Lucas and Kevin Munger [@citelit1] compared the power of persuasion between deepfake video and an identical political scandal presented in some other comparable media formats such as textual headlines or audio recordings, and they demonstrated that deepfakes are no more effective than the same misinformation produced by other media formats, being not uniquely powerful at deception or affective manipulation [@citelit1]. 
+Additionally, they [@citelit1] also investigated the heterogeneity by participants' characteristics. It is noticeable that the authors [@citelit1] registered the older adults as the subgroups with hypothesized susceptibility to the deepfake detection, assuming they might be unable to evaluate the accuracy of digital information. And in their first experiment (exposure), which compares the attitudinal effects (the extent of fake in the clips and the change in effect to the target of the clips) of scandal clips by different subgroups of respondents, they found ‘although the elderly are more likely to be effectively triggered by the Warren fake media clippings relative to those below 65, there is no detectable difference in deception nor across media.’[@citelit1]
+
+However, in the second experiment (Detection), which examines the ability of respondents to discriminate between real and fake clippings, they [@citelit1] did not perform comparisons across different age groups, but compared the outcome differences across several motivated reasoning factors (cognitive reflection, political knowledge, digital knowledge and partisan identity) instead [@citelit1].
+
+On the basis of what Soubhik Barari, Christopher Lucas and Kevin Munger [@citelit1] have investigated for heterogeneity by the elderly and those below 65. We adjust the code, registering the young people (18-24 years old) as the subgroups with hypothesized susceptibility to deepfake detection, to perform comparisons in outcomes of dual experiments across young people and those older than 24. The reproducing materials provided by Soubhik Barari [@citelit5], allow us to produce this narrow replication of Soubhik Barari, Christopher Lucas and Kevin Munger [@citelit1].
+
+There are some reasons motivating us to perform this relocation. According to [@citelit4], young people ageing between 18 and 24 years old, are the largest age group who engage with countless images and videos that have been edited or digitally altered. For instance, a lot of young people are exposed to ironic TikTok videos. And hence, these people are more likely to touch with deepfake every day, compared with older adults. 
+However, we might suspect whether they are aware of or have they thought deeply about the disinformation online? Moreover, we are also wondering about their ability to discriminate between real and fake information.  
+
+We acknowledge and are grateful for the replication materials provided by the authors of Soubhik Barari, Christopher Lucas and Kevin Munger [@citelit1]. The remainder of this paper is formulated as follows. Section 2 will briefly talk about the experimental design. Section 3 will generally discuss the data and model relevant to our replication. Section 4 will summarize our associated findings, and finally Section 5 will provide more discussions for our findings. 
+
+\newpage
+
+# Experimental Design
+Barari, Lucas and Munger did 2 experiments in this study. The first experiment is an exposure experiment of a 2 x 6 pairing factorial design. Some of the randomly chosen respondents are informed about deepfakes while the rest are not. Then they are all exposed to a single fictitious news feed which is randomly chosen from any one of the following 6 situations: text, audio, skit, video, ad, no clip at all (the control group), and the videos used are deepfakes [@citelit1].
+
+During the experiment, a natural “news-feed” environment is implemented: each respondent watches 6 media clips in order and the third news feed is a fictitious one, and the rest clips are real. An actress is paid to perform as Elizabeth Warren in the skit and uses the same audio recording as the audio condition. The deepfake video is constructed from the footage used in the skit condition. This setting is very important because it enhances the internal validity of this experiment. If video conditions present different results compared to the audio and the text conditions but not with the skit condition, then this means the audiovisual information is most persuasive, no matter if the video is fictionalized or not [@citelit1].
+
+The following experiment is a detection experiment: same respondents are asked to scroll through 8 news videos which allows us to find the within-individual deception rate. Before the task, half of the respondents are debriefed about whether they are exposed to deepfake videos in the first experiment, while the other half are not. Later, half of the subjects are also provided an accuracy prime [@citelit1]. For this experiment, since subjects may watch the same deepfake videos before, an upward bias may exist here although none of them mention this in open feedback. All respondents are randomly assigned into 3 situations with different levels of deepfakes used to construct the video: 75% (high-fake), 25% (low-fake) and 0% (no-fake) [@citelit1].
+
+\newpage
+
+# Data and Model
+The experiments described above are two survey experiments on the Lucid survey research platform, which eventually collects a sample size of 5,750 valid respondents out of 17,501 total participants in September 2020 and October 2020 [@citelit1]. Thus the dataset includes the responses from these subjects in both experiments, plus any characteristics that can potentially affect the deepfake deception and appeal. Namely these parameters include some demographic information such as age, gender, education, household income, race, and ethnicity. These characteristics are hypothesized to be highly relevant to the experiment results due to their correlation with digital literacy, internet usage, political knowledge and partisanship [@citelit1].
+
+Since this is a Lucid survey experiment, Barari, Lucas and Munger also introduce a series of “technology checks” to ensure that respondents are actually able to watch and listen to videos. Besides the technology checks, pre-experimental attention checks are also applied here to do a brief review on whether the answers to some basic demographic characteristics (e.g., gender and age) from respondents are consistent with the characteristics provided by Lucid. If the two answers do not match up, these respondents are then labeled as “low-quality” respondents, which will be dropped later when applying the statistical models as a robustness measure [@citelit1].
+
+Another safeguard for the validity of this experiment is the representativeness of the data. Barari, Lucas, & Munger adjust the distribution of the originally collected data by using raking to calculate post-stratification weights, which tries to duplicate the demographics traits in the most recent Current Population Survey (CPS). Similar to the “low-quality” labels, weighted regression also acts as a robustness measure in later analyses. Remember that some demographics are correlated to the experiment results, so this step is very important because it eliminates the bias in results and enhances the external validity of this experiment.
+
+Three methods in total are used in each discussion of the experiment results and they are reproduced in a very similar way as Barari, Lucas and Munger did. While their research question focuses on comparing the deepfake videos with other media formats, our research narrows it down to examine the differences between age groups. So our models compare the differences between age groups instead of which media condition the subject exposed to as Barari, Lucas and Munger did.
+
+First there is a figure showing the value of the estimate (namely, the mean value) and the 95% confidence interval of the estimate for different age groups. The 95% confidence interval is constructed by adding and subtracting 1.96*estimate, which requires the assumption of normality. Since the data is sufficiently large, and each response is independent, so the normality assumption is relaxed here and thus this analysis is reliable. Next is a non-parametric test (t-test) to directly compare the difference in mean values among various age groups, which also leads to valid interpretation based on the same reasons as the confidence interval. Finally multiple linear regressions are performed as a robustness measure [@citelit1].
+
+In the exposure experiment, the regression model examining the age effect on deception is estimated via [@citelit1]:
+
+\begin{equation}
+Believei = $$\tau$$iAgegroupi+$$\beta$$Xi+$$\varepsilon i$$
+\end{equation}
+
+where Believe$i$ is the extent of belief (from 1-5) that clipping was not fake or doctored, Agegroupi splits the sample into 5 groups based on respondents’ age: 18-24,  25-34, 35-44, 45-64 and 65+, and the age group of 18-24 acts as a reference category in the regression results. Xi is a vector of covariates including the device platform, media condition (treat), gender, education, cognitive resources (CRT), measures of digital literacy, political knowledge and internet usage, if the respondent is a sexist. $\varepsilon i$ is the error term and $\beta$ is a coefficient vector for the covariates. The model examining the age effect on affect is equivalent to that for measuring deception, except Favor$i$, the favorability as the outcome.
+
+In the detection experiment, the key model [@citelit1] we use to test the effect of age on detection accuracy via the specification is also similar with what we have defined, except DetectAcc$i$, the ability to detect between real and fake clippings. Barari, Lucas, & Munger uses R, and our reproduction is also done in R [@citeR].
+
+\newpage
+
+# Results
+```{r, echo = FALSE, warning=FALSE,regfloat=TRUE}
+load(here::here("inputs/deepfake.RData"))
+colorscheme <- scale_fill_manual(values=c("#C77CFF","#00BFC4","#7CAE00","#F8766D"))
+
+### diff-in-means
+panel1 <- dat %>% filter(treat != "ad", treat != "control") %>%
+    mutate(treat = fct_relevel(treat, "skit","audio","text","video")) %>%
+    group_by(treat) %>% summarise(estimate=mean(believed_true, na.rm=T), std.error=sd(believed_true, na.rm=T)/sqrt(n())) %>%
+    mutate(panel="All\n") %>%
+    ggplot(aes(x=treat, y=estimate, ymin=estimate-1.96*std.error, ymax=estimate+1.96*std.error)) +
+    geom_segment(x=0, xend=4.5, 
+                 y=mean(dat$believed_true[!(dat$treat %in% c("ad","control","skit"))], na.rm=T),
+                 yend=mean(dat$believed_true[!(dat$treat %in% c("ad","control","skit"))], na.rm=T), 
+               size=2, lty=1, color="red", inherit.aes = F) +
+    geom_pointrange(aes(shape=treat, fill=treat), position=position_dodge(width=.9), color="black", size=1, stroke=.5) +
+    geom_text(aes(group=treat, label=treat, y=estimate+1.96*std.error+0.2), position=position_dodge(width=.9), size=4) +
+    scale_shape_manual(values=c(21,22,23,24)) +
+    facet_grid(panel ~ .) + 
+    scale_x_discrete(expand=c(0.2,0.2)) + colorscheme +
+    ylab("") + xlab("") + theme_linedraw() + coord_flip(ylim=c(1,5)) +
+    theme(title = element_text(size=5),
+          legend.position = "none",
+          axis.title.y = element_text(size=16),
+          axis.ticks.y = element_blank(),
+          axis.text.y = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size=16),
+          axis.text.x = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.title.x = element_text(size=14, hjust=0))
+
+dd <- bind_rows(
+    dat %>% filter(!is.na(agegroup)) %>% filter(treat != "ad", treat !="control") %>%
+        mutate(agegroup = as.factor(agegroup)) %>%
+        mutate(treat = as.character(treat)) %>%
+        mutate(treat = fct_relevel(treat, "skit","audio","text","video")) %>%
+        group_by(agegroup,treat) %>%
+        summarise(estimate=mean(believed_true, na.rm=T), std.error=sd(believed_true, na.rm=T)/sqrt(n())) %>%
+        rename(group=agegroup) %>% mutate(type="By Age\nGroup"))
+
+dd$group <- as_factor(dd$group)
+    
+panel3 <- dd %>%
+    ggplot(aes(x=group, y=estimate, ymin=estimate-1.96*std.error, ymax=estimate+1.96*std.error)) +
+    # geom_bar(aes(fill=treat), position=position_dodge(width=.9), color="black", stat="identity") +
+    # geom_errorbar(aes(group=treat), position=position_dodge(width=.9), width=.2, size=1) +
+    scale_shape_manual(values=c(21,22,23,24)) +
+    geom_segment(data = dd %>% 
+                     filter(treat != "skit") %>% 
+                     group_by(type, treat) %>% mutate(group_x=1:n()) %>% ungroup() %>%
+                     group_by(type,group,group_x) %>% 
+                     summarise(yint=mean(estimate)),
+               aes(x=group_x-.5, xend=group_x+.5, y=yint, yend=yint), 
+               size=2, lty=1, color="red", inherit.aes = F) +
+    geom_vline(aes(xintercept=1.5), lty=2, color="grey", alpha=0.8) +
+    geom_vline(aes(xintercept=2.5), lty=2, color="grey", alpha=0.8) +
+    geom_vline(aes(xintercept=3.5), lty=2, color="grey", alpha=0.8) +
+    geom_vline(aes(xintercept=4.5), lty=2, color="grey", alpha=0.8) +
+    geom_pointrange(aes(shape=treat, fill=treat), position=position_dodge(width=.9), color="black", size=1, stroke=.5) +
+    geom_text(aes(group=treat, label=treat, y=estimate+1.96*std.error+0.2), position=position_dodge(width=.9), size=4) +
+    facet_grid(type ~ ., space="free", scales="free") +
+    scale_x_discrete(expand=c(0.2,0.2)) + colorscheme +
+    ylab("mean level of deception in group (95% CI)") + xlab("") + coord_flip(ylim=c(1,5)) + theme_linedraw() +
+    theme(title = element_text(size=5),
+          legend.position = "none",
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          strip.text = element_text(size=15),
+          axis.text.y = element_text(size=14),
+          axis.ticks.y = element_blank(),
+          axis.text.x = element_text(size=12),
+          axis.title.x = element_text(size=18))
+
+pp <- cowplot::plot_grid(panel1, panel3, nrow = 8,
+                         align="v",rel_heights = c(0.3, 1))
+
+
+cowplot::save_plot("figures/topline_exp1_a.pdf", plot = pp, base_height=25.5, base_width=8)
+```
+
+
+```{r fig01, fig.cap="Marginal Means in Exposure Experiment Deception Outcomes",echo = FALSE, warning=FALSE,regfloat=TRUE}
+knitr::include_graphics(path = ("figures/topline_exp1_a.pdf"))
+```
+
+\@ref(fig:fig01)) shows the mean level of deception in each age group where the outcome is the extent of believing the clipping is fake or doctored, on a scale of 1-5. The p-values are respectively 0.392, 0.7338, 0.8289, and 0.8863 when we compare the 18-24 age group with age 25-34, age 35-44, age 45-64, and age 65+.  Finally the regression results of extent of belief on age groups and covariates are presented in [ref: Table 1].
+
+```{r fig02, fig.cap="Marginal Means in Exposure Experiment Affect Outcomes",echo = FALSE, warning=FALSE,regfloat=TRUE}
+
+knitr::include_graphics(path = "figures/topline_exp1_b_2.pdf")
+```
+
+We then want to examine the favorability heterogeneity for different subgroups. From the topline null results shown in the \@ref(fig:fig02)), we can see that young respondents are easier to be affectively triggered by fake clippings than participants aging between 25 and 44, especially presenting a significant difference with the 35-44 age subgroup ($\delta$ = -8.66, $t$= -12.16, $p$ value <0.05). The results also indicate the same finding with what authors have investigated, showing that the elderly are more likely to be affectively triggered by the inveracious media clippings than the young people ($\delta$ =3.42, $t$ =2.0196, $p$ value <0.05). The results regression model [Table 2] also shows the same insights.
+
+##Detection experiment results
+```{r fig03, fig.cap='Marginal Means in Detection Experiment Outcomes',echo = FALSE, warning=FALSE,regfloat=TRUE}
+knitr::include_graphics(path = "figures/topline_exp2.pdf")
+```
+
+
+\@ref(fig:fig03)) shows the overall accuracy of detecting fake videos as well as accuracy in the five age groups (18-24, 25-34, 35-44, 45-64, 65+), along with associated false positive and false negative rates in the second detection experiment. Table[4] consists of 6 regression models and shows the predictors of the second experiment detection accuracy including six age groups that involved in the detection experiment. Since our research question is to examine the differences between age groups and detection accuracy of deepfake videos, only the 45 to 65 age group is statistically significant compared to its peers. 
+
+\newpage
+
+# Discussion
+## First experiment
+
+One interesting point from \@ref(fig:fig01)) is that all age groups are statistically better at detecting the fake skit compared to video, text or audio while no significant difference is found between the later three media formats. This may imply that skit is as persuasive as the video for the youngest generation in our experiment although the skit is obviously fictionalized. However, no significant differences in deception levels between the 18-24 age group with any other groups regarding the two-sample t-tests results. The regression results shown in [ref: Table 1] also agree that there are no statistically significant differences.
+
+## Second experiment
+It is clear from the graph that the best detection accuracy is observed in the 45 to 64 age group with the highest accuracy rate of detecting low-fake and high-fake videos that are around 58% and 56% respectively. There is a statistically significant difference between the 45-64 age group and second-stage detection accuracy since the p-value for regression models are less than 0.1 and 0.05[Table 4]. Compared to the false positive rate by different age groups in \@ref(fig:fig03)), the 45 to 64 age group has the lowest false positive rate which Indicating participants in this age group are less likely to identify real videos as fake clips than their peers. More specifically, respondents in the 35-44, 45-64 and 65+ age groups have shared the similarity of higher accuracy in detecting no-fake videos than low-fake and high-fake clips. Although Barari, Lucas and Munger have mentioned an interesting finding in their deepfake research paper that “users over 65 shared nearly 7 times as many as articles from fake news domains as the youngest age groups'' on Facebook [@guess2020digital]. Based on the result shown in \@ref(fig:fig03)) elder generation especially those who are over 65 years old are more likely to achieve the best detection accuracy of real videos as well as no-fake videos than the other four age groups.
+ 
+By contrast, there is no statistically significant difference between the younger generations and second-stage detection accuracy. However, younger participants who are between 18 to 34 years old are much better at classifying low-fake videos correctly which leads to a greater value of accuracy in low-fake videos than no-fake and high-fake clips and correspondingly the lowest false-negative rate of detecting low-fake videos is observed. Participants who are under 24 years old achieved excellent detection accuracy in the low or high level of fake clips with approximately 55% and 54% respectively. However, younger generations seem less able to recognize real videos from a list of combinations of real and fake news videos, resulting in a high false-positive rate in 18-24 and 25-34 age groups where a larger difference between no-fake and high-fake is found especially in the 18-24 age group. 
+ 
+Millennials and Gen Z’ers who are often known as the youngest generation born after 1996 and is the generation who has first access to the internet technology and was largely exposed to the web revolution that occurred in the 1990s. For adolescents in the age group between 15 to 20 and adults around 21 to 30 years old, the major media consumptions for them are mainly taking place on online media and social media compared to older generations [@manalu2018understanding]. Based on a study of 6000 college students in the US from 11 universities, around 89% of the respondents reported that they relied on social media to receive news [@head2018students]. Meanwhile, insufficient information and news feed are already overwhelmed. Social media such as Twitter, Facebook, Instagram and Tiktok are public platforms which mean everyone could post or share information without validating the sources and contents regarding ethical, truthful and high quality. Fake news on social media is something that can not be avoided entirely and is a challenge that these top tech companies make an effort to minimize the risk from this type of misinformation and disinformation and limit the spreading of harmful and misleading information since ignoring the possible effects could lead to an unintended impact on credible and validity of information shared on social media networks. Around 88% of 18 to 29 years old respondents reported using social media frequently in a 2018 survey [@smith2018social]. However, people often consider Gen Z’ers are familiar with web technology and social media platforms, approximately 97% of college students reported that they have shared misinformation on social media in a 2015 study. Moreover, based on a study in 2019, colleague students are better at classifying fake news rather than real news with 60.58% accuracy of real news identification and 64.29% accuracy of fake news identification [@leeder2019college]. A similar outcome is found this our research, younger generations from 18 to 24 years older are less likely to identify real video clips from a list of videos consist of both real and fake clips with less than 50% of detection accuracy. In contrast, participants from 65+ age groups performed the best identification of real videos with more than 60% of detection accuracy. 
+
+\newpage
+
+# Limitation and Future works
+However, one potential weakness of the survey experiments comes with the collection of data just as other web surveys. As we discussed in the data section, among all 17,501 subjects who launched the survey, only 5,750 (32.86%) subjects passed a series of checks or completed the full experiment. If there exist some similarities within those people who drop the survey experiment and these shared characteristics also relate to the experiment result, at the same time they are not captured by the demographics in the dataset (not act as controls in the experiment), then there might be a selection bias in the results. For example, if only subjects that are patient enough finish the survey experiment, while impatient subjects leave the research platform before completing it, then the data only includes patient respondents. If more patient subjects are more likely to detect the use of deepfake, plus we can hardly foresee “the level of patience” from demographics (they may be more careful and cautious), then it is unobserved here and the results will underestimate the threat of deepfakes since the randomization is not applied at the very first stage of choosing the respondents. Although web surveys are a reachable and cheap approach to gather relatively large data, self-selection (i.e., individuals select themselves to complete the survey) and under-coverage (i.e., some groups in the population are under-represented due to less access to the internet) [@citelit6]. Bethlehem’s study also points that both of them threaten the weighting adjustment techniques and the representativeness of the sufficiently large dataset, which can eventually lead to biased estimates.
+
+\newpage
+
+# Appendix
+## Appendix A
+```{=latex}
+
+\begin{table}[!htbp] \centering 
+  \caption{\textbf{Models of Belief in Exposure-Stage (News Feed) Scandal Clipping}} 
+  \label{firststage_deception} 
+\footnotesize 
+\begin{tabular}{@{\extracolsep{1pt}}lccccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{7}{c}{\normalsize Extent of belief that clipping was not fake or doctored [1-5]} \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6) & (7)\\ 
+\hline \\[-1.8ex] 
+ Age 25-34 & 0.07 & 0.19 & 0.04 & 0.001 & 0.09 & 0.02 & 0.10 \\ 
+  & (0.17) & (0.15) & (0.18) & (0.17) & (0.15) & (0.18) & (0.16) \\ 
+  Age 35-44 & $-$0.11 & $-$0.02 & $-$0.11 & $-$0.13 & $-$0.15 & $-$0.11 & $-$0.06 \\ 
+  & (0.16) & (0.14) & (0.17) & (0.17) & (0.15) & (0.17) & (0.15) \\ 
+  Age 45-64 & $-$0.03 & 0.05 & $-$0.02 & $-$0.03 & $-$0.13 & $-$0.04 & $-$0.02 \\ 
+  & (0.15) & (0.13) & (0.16) & (0.16) & (0.14) & (0.17) & (0.14) \\ 
+  Age 65+  & 0.01 & 0.10 & 0.02 & $-$0.002 & $-$0.05 & 0.02 & 0.07 \\ 
+  & (0.15) & (0.13) & (0.16) & (0.16) & (0.14) & (0.17) & (0.15) \\ 
+  On Mobile &  &  &  & 0.04 & 0.07 & 0.15$^{*}$ & 0.25$^{***}$ \\ 
+  &  &  &  & (0.08) & (0.08) & (0.09) & (0.09) \\ 
+  Audio &  &  &  & 0.10 & 0.12 & 0.12 & 0.17$^{*}$ \\ 
+  &  &  &  & (0.09) & (0.09) & (0.09) & (0.09) \\ 
+  Text &  &  &  & $-$0.01 & $-$0.14 & 0.02 & $-$0.06 \\ 
+  &  &  &  & (0.09) & (0.09) & (0.09) & (0.09) \\ 
+  Skit &  &  &  & $-$0.68$^{***}$ & $-$0.65$^{***}$ & $-$0.66$^{***}$ & $-$0.59$^{***}$ \\ 
+  &  &  &  & (0.10) & (0.10) & (0.11) & (0.10) \\ 
+  High School &  &  &  & $-$0.03 & $-$0.25 & $-$0.24 & $-$0.28 \\ 
+  &  &  &  & (0.34) & (0.20) & (0.34) & (0.20) \\ 
+  College &  &  &  & $-$0.02 & $-$0.24 & $-$0.20 & $-$0.21 \\ 
+  &  &  &  & (0.33) & (0.21) & (0.34) & (0.20) \\ 
+  Postgrad &  &  &  & $-$0.18 & $-$0.34 & $-$0.36 & $-$0.36 \\ 
+  &  &  &  & (0.34) & (0.22) & (0.34) & (0.22) \\ 
+  Independent PID &  &  &  &  & 0.28$^{***}$ & 0.11 & 0.24$^{**}$ \\ 
+  &  &  &  &  & (0.10) & (0.11) & (0.11) \\ 
+  Republican PID &  &  &  &  & 0.62$^{***}$ & 0.56$^{***}$ & 0.62$^{***}$ \\ 
+  &  &  &  &  & (0.07) & (0.08) & (0.08) \\ 
+  CRT &  &  &  & $-$0.15 & $-$0.15 & $-$0.04 & 0.08 \\ 
+  &  &  &  & (0.14) & (0.14) & (0.15) & (0.15) \\ 
+  Male &  &  &  & $-$0.001 & 0.02 & 0.03 & 0.05 \\ 
+  &  &  &  & (0.07) & (0.07) & (0.07) & (0.07) \\ 
+  Political Knowledge &  &  &  & 0.07 & 0.32$^{**}$ & 0.11 & 0.33$^{**}$ \\ 
+  &  &  &  & (0.15) & (0.15) & (0.16) & (0.16) \\ 
+  Internet Usage &  &  &  & 0.05 & 0.08 & 0.06 & 0.07 \\ 
+  &  &  &  & (0.05) & (0.05) & (0.05) & (0.05) \\ 
+  Ambivalent Sexism &  &  &  & 0.16$^{***}$ & 0.03 & 0.05 & 0.06 \\ 
+  &  &  &  & (0.04) & (0.04) & (0.04) & (0.04) \\ 
+  Constant & 3.33$^{***}$ & 3.27$^{***}$ & 3.34$^{***}$ & 2.71$^{***}$ & 2.68$^{***}$ & 2.74$^{***}$ & 2.38$^{***}$ \\ 
+  & (0.14) & (0.12) & (0.15) & (0.51) & (0.43) & (0.53) & (0.45) \\ 
+ \hline \\[-1.8ex] 
+Weighted? &  & \checkmark &  &  & \checkmark &  & \checkmark \\ 
+Low-Quality Dropped? &  &  & \checkmark &  &  & \checkmark & \checkmark \\ 
+\hline \\[-1.8ex] 
+N & 1,619 & 1,619 & 1,445 & 1,619 & 1,619 & 1,445 & 1,445 \\ 
+R$^{2}$ & 0.002 & 0.002 & 0.001 & 0.05 & 0.09 & 0.09 & 0.09 \\ 
+Adjusted R$^{2}$ & $-$0.001 & $-$0.0003 & $-$0.001 & 0.04 & 0.08 & 0.08 & 0.08 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\multicolumn{8}{l}{$^{*}$p $<$ .1; $^{**}$p $<$ .05; $^{***}$p $<$ .01} \\ 
+\multicolumn{8}{l}{\textit{Notes}: Reference category for medium is Video. CRT is scaled 0-1, political knowledge and ambivalent} \\ 
+\multicolumn{8}{l}{sexism are 0-1, internet usage is 1-7. Sample did not receive information in the first stage.} \\ 
+\end{tabular} 
+\end{table} 
 
 ```
 
-#Abstract
 
-#Introduction
+## Appendix B
+```{=latex}
 
-#Data and Model
+\begin{table}[!htbp] \centering 
+  \caption{\textbf{Models of Scandal Target Affect}} 
+  \label{firststage_feelings} 
+\footnotesize 
+\begin{tabular}{@{\extracolsep{-2pt}}lccccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{7}{c}{\normalsize Elizabeth Warren Feeling Thermometer} \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6) & (7)\\ 
+\hline \\[-1.8ex] 
+ Age 25-34 & 2.94 & 3.18 & 3.91 & 4.95$^{***}$ & 4.58$^{***}$ & 6.23$^{***}$ & 6.03$^{***}$ \\ 
+  & (2.27) & (1.95) & (2.46) & (1.82) & (1.61) & (1.95) & (1.72) \\ 
+  Age 35-44 & 8.66$^{***}$ & 10.16$^{***}$ & 10.03$^{***}$ & 11.81$^{***}$ & 12.51$^{***}$ & 12.33$^{***}$ & 12.80$^{***}$ \\ 
+  & (2.17) & (1.90) & (2.34) & (1.80) & (1.64) & (1.92) & (1.75) \\ 
+  Age 45-64 & $-$2.61 & $-$3.84$^{**}$ & $-$1.25 & 2.73 & 2.47 & 3.64$^{**}$ & 2.56 \\ 
+  & (2.03) & (1.73) & (2.18) & (1.73) & (1.52) & (1.84) & (1.61) \\ 
+  Age 65+ & $-$3.42$^{*}$ & $-$5.15$^{***}$ & $-$1.37 & 0.05 & $-$0.32 & 1.30 & 0.07 \\ 
+  & (2.03) & (1.80) & (2.17) & (1.77) & (1.62) & (1.89) & (1.71) \\ 
+  Info Provided &  &  &  & 0.74 & 0.68 & 0.69 & 0.77 \\ 
+  &  &  &  & (0.72) & (0.74) & (0.76) & (0.78) \\ 
+  On Mobile &  &  &  & $-$1.91$^{*}$ & $-$1.02 & $-$3.04$^{***}$ & $-$2.97$^{***}$ \\ 
+  &  &  &  & (0.98) & (0.99) & (1.03) & (1.05) \\ 
+  Video &  &  &  & $-$3.42$^{***}$ & $-$3.98$^{***}$ & $-$2.65$^{*}$ & $-$3.45$^{**}$ \\ 
+  &  &  &  & (1.28) & (1.30) & (1.36) & (1.38) \\ 
+  Audio &  &  &  & $-$3.32$^{***}$ & $-$4.29$^{***}$ & $-$2.77$^{**}$ & $-$3.78$^{***}$ \\ 
+  &  &  &  & (1.25) & (1.28) & (1.32) & (1.36) \\ 
+  Text &  &  &  & $-$2.60$^{**}$ & $-$1.37 & $-$2.34$^{*}$ & $-$1.76 \\ 
+  &  &  &  & (1.25) & (1.28) & (1.32) & (1.34) \\ 
+  Skit &  &  &  & $-$3.33$^{***}$ & $-$3.53$^{***}$ & $-$3.00$^{**}$ & $-$4.07$^{***}$ \\ 
+  &  &  &  & (1.25) & (1.27) & (1.32) & (1.34) \\ 
+  Attack Ad &  &  &  & $-$4.01$^{***}$ & $-$3.76$^{***}$ & $-$3.45$^{***}$ & $-$3.77$^{***}$ \\ 
+  &  &  &  & (1.26) & (1.26) & (1.33) & (1.33) \\ 
+  High School &  &  &  & $-$1.55 & $-$1.37 & $-$2.66 & $-$2.03 \\ 
+  &  &  &  & (3.58) & (2.29) & (3.70) & (2.32) \\ 
+  College &  &  &  & 0.11 & 1.27 & $-$2.00 & $-$0.53 \\ 
+  &  &  &  & (3.58) & (2.33) & (3.70) & (2.38) \\ 
+  Postgrad &  &  &  & 8.70$^{**}$ & 11.81$^{***}$ & 6.28$^{*}$ & 9.89$^{***}$ \\ 
+  &  &  &  & (3.64) & (2.48) & (3.78) & (2.56) \\ 
+  Independent PID &  &  &  & $-$26.82$^{***}$ & $-$26.70$^{***}$ & $-$26.48$^{***}$ & $-$27.03$^{***}$ \\ 
+  &  &  &  & (1.20) & (1.21) & (1.26) & (1.27) \\ 
+  Republican PID &  &  &  & $-$40.07$^{***}$ & $-$38.14$^{***}$ & $-$40.54$^{***}$ & $-$39.10$^{***}$ \\ 
+  &  &  &  & (0.83) & (0.84) & (0.88) & (0.88) \\ 
+  CRT &  &  &  & $-$1.37 & $-$1.54 & $-$0.32 & $-$0.29 \\ 
+  &  &  &  & (1.61) & (1.65) & (1.71) & (1.74) \\ 
+  Male &  &  &  & 0.09 & $-$1.08 & $-$0.04 & $-$0.74 \\ 
+  &  &  &  & (0.82) & (0.81) & (0.87) & (0.85) \\ 
+  Political Knowledge &  &  &  & 1.18 & 0.31 & 1.20 & 0.44 \\ 
+  &  &  &  & (1.72) & (1.72) & (1.81) & (1.80) \\ 
+  Internet Usage &  &  &  & 0.73 & 0.87 & 0.81 & 1.09$^{*}$ \\ 
+  &  &  &  & (0.57) & (0.58) & (0.61) & (0.63) \\ 
+  Ambivalent Sexism &  &  &  & $-$3.95$^{***}$ & $-$3.38$^{***}$ & $-$4.66$^{***}$ & $-$3.90$^{***}$ \\ 
+  &  &  &  & (0.47) & (0.47) & (0.50) & (0.50) \\ 
+  Constant & 43.41$^{***}$ & 42.94$^{***}$ & 41.40$^{***}$ & 67.13$^{***}$ & 64.50$^{***}$ & 68.68$^{***}$ & 65.16$^{***}$ \\ 
+  & (1.86) & (1.55) & (2.01) & (5.62) & (4.92) & (5.97) & (5.25) \\ 
+ \hline \\[-1.8ex] 
+Weighted? &  & \checkmark &  &  & \checkmark &  & \checkmark \\ 
+Low-Quality Dropped? &  &  & \checkmark &  &  & \checkmark & \checkmark \\ 
+\hline \\[-1.8ex] 
+N & 5,524 & 5,524 & 4,895 & 5,523 & 5,523 & 4,894 & 4,894 \\ 
+R$^{2}$ & 0.02 & 0.03 & 0.02 & 0.39 & 0.36 & 0.40 & 0.38 \\ 
+Adjusted R$^{2}$ & 0.02 & 0.03 & 0.01 & 0.39 & 0.36 & 0.40 & 0.38 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\multicolumn{8}{l}{$^{*}$p $<$ .1; $^{**}$p $<$ .05; $^{***}$p $<$ .01} \\ 
+\multicolumn{8}{l}{\textit{Notes}: Reference category for medium is Control.} \\ 
+\end{tabular} 
+\end{table} 
+```
 
-#Results
+## Applendix C
+```{=latex}
 
-#Discussion
+\begin{table}[!htbp] \centering 
+  \caption{\textbf{Predictors of Second-Stage Detection Accuracy}} 
+  \label{secondstage_accuracy} 
+\footnotesize 
+\begin{tabular}{@{\extracolsep{1pt}}lcccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{6}{c}{\normalsize Detection Accuracy (\% Correctly Classified)} \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\ 
+\hline \\[-1.8ex] 
+ Digital Literacy &  & 0.25$^{***}$ & 0.22$^{***}$ & 0.23$^{***}$ & 0.20$^{***}$ & 0.21$^{***}$ \\ 
+  &  & (0.02) & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Accuracy Prompt & $-$0.002 &  & $-$0.01 & $-$0.004 & $-$0.005 & $-$0.002 \\ 
+  & (0.01) &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Stage 1 Debrief &  &  & 0.01$^{*}$ & 0.01$^{*}$ & 0.01$^{*}$ & 0.01$^{*}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Stage 1 Info Provided &  &  & $-$0.01 & $-$0.001 & $-$0.01 & $-$0.004 \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Political Knowledge &  &  & 0.18$^{***}$ & 0.19$^{***}$ & 0.18$^{***}$ & 0.19$^{***}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.02) & (0.02) \\ 
+  Internet Usage &  &  & $-$0.001 & $-$0.01 & 0.002 & $-$0.001 \\ 
+  &  &  & (0.005) & (0.005) & (0.01) & (0.01) \\ 
+  Low-fake Env. &  &  & 0.03$^{***}$ & 0.04$^{***}$ & 0.03$^{***}$ & 0.05$^{***}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  No-fake Env. &  &  & 0.04$^{***}$ & 0.04$^{***}$ & 0.04$^{***}$ & 0.05$^{***}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Age groups 25-34 &  &  & $-$0.01 & 0.003 & $-$0.004 & 0.01 \\ 
+  &  &  & (0.02) & (0.01) & (0.02) & (0.01) \\ 
+  Age groups 35-44 &  &  & $-$0.02 & $-$0.01 & $-$0.02 & $-$0.01 \\ 
+  &  &  & (0.02) & (0.01) & (0.02) & (0.01) \\ 
+  Age groups 45-64 &  &  & 0.01 & 0.02$^{*}$ & 0.02 & 0.03$^{**}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.02) & (0.01) \\ 
+  Age groups 65+ &  &  & 0.004 & 0.01 & 0.01 & 0.01 \\ 
+  &  &  & (0.01) & (0.01) & (0.02) & (0.01) \\ 
+  High School &  &  & 0.01 & 0.01 & 0.03 & 0.02 \\ 
+  &  &  & (0.03) & (0.02) & (0.03) & (0.02) \\ 
+  College &  &  & 0.02 & 0.02 & 0.04 & 0.03 \\ 
+  &  &  & (0.03) & (0.02) & (0.03) & (0.02) \\ 
+  Postgrad &  &  & $-$0.005 & $-$0.01 & 0.01 & 0.001 \\ 
+  &  &  & (0.03) & (0.02) & (0.03) & (0.02) \\ 
+  Republican &  &  & 0.06$^{***}$ & 0.08$^{***}$ & 0.07$^{***}$ & 0.08$^{***}$ \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  CRT &  &  & $-$0.06$^{**}$ & $-$0.06$^{**}$ & $-$0.06$^{**}$ & $-$0.06$^{**}$ \\ 
+  &  &  & (0.03) & (0.03) & (0.03) & (0.03) \\ 
+  Republican x CRT &  &  & 0.09$^{***}$ & 0.07$^{***}$ & 0.09$^{***}$ & 0.08$^{***}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Ambivalent Sexism &  &  & 0.001 & $-$0.002 & 0.002 & 0.0004 \\ 
+  &  &  & (0.004) & (0.004) & (0.004) & (0.004) \\ 
+  Constant & 0.57$^{***}$ & 0.36$^{***}$ & 0.16$^{***}$ & 0.18$^{***}$ & 0.13$^{**}$ & 0.14$^{***}$ \\ 
+  & (0.005) & (0.02) & (0.05) & (0.04) & (0.05) & (0.05) \\ 
+ \hline \\[-1.8ex] 
+Weighted? &  &  &  & \checkmark &  & \checkmark \\ 
+Low-Quality Dropped? &  &  &  &  & \checkmark & \checkmark \\ 
+\hline \\[-1.8ex] 
+N & 5,497 & 5,497 & 5,496 & 5,496 & 4,870 & 4,870 \\ 
+R$^{2}$ & 0.0000 & 0.02 & 0.09 & 0.10 & 0.09 & 0.10 \\ 
+Adjusted R$^{2}$ & $-$0.0002 & 0.02 & 0.09 & 0.09 & 0.09 & 0.10 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\multicolumn{7}{l}{$^{*}$p $<$ .1; $^{**}$p $<$ .05; $^{***}$p $<$ .01} \\ 
+\multicolumn{7}{l}{\textit{Notes}: Reference category for environment is High-fake. Reference category for age group is 18-24. PID pooled for brevity.} \\ 
+\end{tabular} 
+\end{table} 
 
+```
 
-#Appendix
+## Applendix D
+```{=latex}
 
-## Explortary analysis
+\begin{table}[!htbp] \centering 
+  \caption{\textbf{Predictors of Second-Stage False Positive Rate (FPR)}} 
+  \label{secondstage_fpr} 
+\footnotesize 
+\begin{tabular}{@{\extracolsep{1pt}}lcccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{6}{c}{\normalsize Detection FPR (\% Real Videos Classified as Deepfakes)} \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\ 
+\hline \\[-1.8ex] 
+ Digital Literacy &  & $-$0.11$^{***}$ & $-$0.09$^{***}$ & $-$0.12$^{***}$ & $-$0.06$^{**}$ & $-$0.09$^{***}$ \\ 
+  &  & (0.03) & (0.03) & (0.03) & (0.03) & (0.03) \\ 
+  Accuracy Prompt & $-$0.01 &  & 0.004 & $-$0.01 & 0.003 & $-$0.01 \\ 
+  & (0.01) &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Stage 1 Debrief &  &  & $-$0.03$^{***}$ & $-$0.03$^{***}$ & $-$0.03$^{***}$ & $-$0.03$^{***}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Stage 1 Info Provided &  &  & 0.01 & $-$0.0003 & 0.01 & 0.004 \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Political Knowledge &  &  & $-$0.12$^{***}$ & $-$0.11$^{***}$ & $-$0.12$^{***}$ & $-$0.12$^{***}$ \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Internet Usage &  &  & $-$0.004 & $-$0.002 & $-$0.004 & $-$0.002 \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Low-fake Env. &  &  & 0.03$^{***}$ & 0.02$^{***}$ & 0.02$^{***}$ & 0.01 \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  No-fake Env. &  &  & 0.23$^{***}$ & 0.23$^{***}$ & 0.22$^{***}$ & 0.21$^{***}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Age groups 25-34 &  &  & 0.02 & $-$0.001 & 0.01 & $-$0.01 \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Age groups 35-44 &  &  & 0.01 & $-$0.03$^{*}$ & 0.005 & $-$0.04$^{**}$ \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Age groups 45-64 &  &  & $-$0.02 & $-$0.04$^{***}$ & $-$0.02 & $-$0.05$^{***}$ \\ 
+  &  &  & (0.02) & (0.01) & (0.02) & (0.02) \\ 
+  Age groups 65+ &  &  & $-$0.0001 & $-$0.03$^{*}$ & 0.002 & $-$0.04$^{**}$ \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  High School &  &  & 0.002 & $-$0.001 & $-$0.02 & $-$0.02 \\ 
+  &  &  & (0.03) & (0.02) & (0.04) & (0.02) \\ 
+  College &  &  & 0.01 & 0.01 & $-$0.02 & $-$0.01 \\ 
+  &  &  & (0.03) & (0.02) & (0.04) & (0.02) \\ 
+  Postgrad &  &  & 0.03 & 0.02 & $-$0.001 & 0.01 \\ 
+  &  &  & (0.04) & (0.02) & (0.04) & (0.02) \\ 
+  Republican &  &  & $-$0.07$^{***}$ & $-$0.09$^{***}$ & $-$0.07$^{***}$ & $-$0.08$^{***}$ \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  CRT &  &  & 0.03 & 0.04 & 0.04 & 0.03 \\ 
+  &  &  & (0.03) & (0.03) & (0.03) & (0.03) \\ 
+  Republican x CRT &  &  & $-$0.07$^{***}$ & $-$0.06$^{***}$ & $-$0.08$^{***}$ & $-$0.07$^{***}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Ambivalent Sexism &  &  & $-$0.0002 & 0.002 & $-$0.002 & 0.001 \\ 
+  &  &  & (0.005) & (0.005) & (0.005) & (0.005) \\ 
+  Constant & 0.28$^{***}$ & 0.37$^{***}$ & 0.43$^{***}$ & 0.48$^{***}$ & 0.44$^{***}$ & 0.49$^{***}$ \\ 
+  & (0.01) & (0.02) & (0.06) & (0.05) & (0.06) & (0.05) \\ 
+ \hline \\[-1.8ex] 
+Weighted? &  &  &  & \checkmark &  & \checkmark \\ 
+Low-Quality Dropped? &  &  &  &  & \checkmark & \checkmark \\ 
+\hline \\[-1.8ex] 
+N & 5,495 & 5,495 & 5,494 & 5,494 & 4,869 & 4,869 \\ 
+R$^{2}$ & 0.0002 & 0.003 & 0.16 & 0.17 & 0.16 & 0.16 \\ 
+Adjusted R$^{2}$ & $-$0.0000 & 0.003 & 0.16 & 0.16 & 0.15 & 0.16 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\multicolumn{7}{l}{$^{*}$p $<$ .1; $^{**}$p $<$ .05; $^{***}$p $<$ .01} \\ 
+\multicolumn{7}{l}{\textit{Notes}: Reference category for environment is High-fake. Reference category for age group is 18-24. PID pooled for brevity.} \\ 
+\end{tabular} 
+\end{table} 
+
+```
+
+```{=latex}
+
+\begin{table}[!htbp] \centering 
+  \caption{\textbf{Predictors of Second-Stage False Negative Rate (FNR)}} 
+  \label{secondstage_fnr} 
+\footnotesize 
+\begin{tabular}{@{\extracolsep{1pt}}lcccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{6}{c}{\normalsize Detection FNR (\% Deepfakes Classified as Real Videos)} \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5) & (6)\\ 
+\hline \\[-1.8ex] 
+ Digital Literacy &  & $-$0.03 & $-$0.03 & $-$0.01 & $-$0.05 & $-$0.02 \\ 
+  &  & (0.03) & (0.03) & (0.03) & (0.03) & (0.04) \\ 
+  Accuracy Prompt & $-$0.01 &  & $-$0.004 & $-$0.01 & 0.003 & $-$0.002 \\ 
+  & (0.01) &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Stage 1 Debrief &  &  & 0.01 & 0.01 & 0.01 & 0.01 \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Stage 1 Info Provided &  &  & $-$0.002 & 0.003 & $-$0.01 & $-$0.002 \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Political Knowledge &  &  & $-$0.002 & $-$0.03 & $-$0.01 & $-$0.03 \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Internet Usage &  &  & 0.02$^{***}$ & 0.01 & 0.02$^{***}$ & 0.02$^{**}$ \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Low-fake Env. &  &  & 0.01 & 0.0002 & 0.01 & $-$0.005 \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  No-fake Env. &  &  & $-$0.001 & 0.02 & $-$0.01 & 0.01 \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Age groups 25-34 &  &  & 0.03 & 0.05$^{**}$ & 0.02 & 0.04$^{*}$ \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Age groups 35-44 &  &  & $-$0.01 & 0.003 & $-$0.01 & 0.003 \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Age groups 45-64 &  &  & 0.03 & 0.04$^{**}$ & 0.02 & 0.04$^{**}$ \\ 
+  &  &  & (0.02) & (0.02) & (0.02) & (0.02) \\ 
+  Age groups 65+ &  &  & 0.01 & 0.02 & 0.01 & 0.01 \\ 
+  &  &  & (0.04) & (0.03) & (0.04) & (0.03) \\ 
+  High School &  &  & 0.03 & 0.04 & 0.03 & 0.03 \\ 
+  &  &  & (0.04) & (0.03) & (0.04) & (0.03) \\ 
+  College &  &  & 0.08$^{*}$ & 0.11$^{***}$ & 0.07 & 0.10$^{***}$ \\ 
+  &  &  & (0.04) & (0.03) & (0.05) & (0.03) \\ 
+  Postgrad &  &  & $-$0.05$^{**}$ & $-$0.04 & $-$0.06$^{**}$ & $-$0.04 \\ 
+  &  &  & (0.02) & (0.03) & (0.03) & (0.03) \\ 
+  Republican &  &  & 0.09$^{**}$ & 0.08$^{*}$ & 0.11$^{***}$ & 0.10$^{**}$ \\ 
+  &  &  & (0.04) & (0.04) & (0.04) & (0.04) \\ 
+  CRT &  &  & 0.02$^{***}$ & 0.02$^{***}$ & 0.01$^{*}$ & 0.01 \\ 
+  &  &  & (0.01) & (0.01) & (0.01) & (0.01) \\ 
+  Republican x CRT &  &  & $-$0.04$^{***}$ & $-$0.03$^{**}$ & $-$0.05$^{***}$ & $-$0.04$^{**}$ \\ 
+  &  &  & (0.01) & (0.02) & (0.02) & (0.02) \\ 
+  Ambivalent Sexism & 0.34$^{***}$ & 0.36$^{***}$ & 0.15$^{**}$ & 0.19$^{***}$ & 0.18$^{**}$ & 0.22$^{***}$ \\ 
+  & (0.01) & (0.03) & (0.07) & (0.06) & (0.07) & (0.07) \\ 
+ \hline \\[-1.8ex] 
+Weighted? &  &  &  & \checkmark &  & \checkmark \\ 
+Low-Quality Dropped? &  &  &  &  & \checkmark & \checkmark \\ 
+\hline \\[-1.8ex] 
+N & 3,690 & 3,690 & 3,690 & 3,690 & 3,266 & 3,266 \\ 
+R$^{2}$ & 0.0002 & 0.0003 & 0.02 & 0.03 & 0.02 & 0.02 \\ 
+Adjusted R$^{2}$ & $-$0.0000 & 0.0000 & 0.02 & 0.03 & 0.01 & 0.02 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\multicolumn{7}{l}{$^{*}$p $<$ .1; $^{**}$p $<$ .05; $^{***}$p $<$ .01} \\ 
+\multicolumn{7}{l}{\textit{Notes}: Reference category for environment is High-fake. Reference category for age group is 18-24. PID pooled for brevity.} \\ 
+\end{tabular} 
+\end{table} 
+
+```
+# Reference
+
