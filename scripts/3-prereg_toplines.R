@@ -18,8 +18,8 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 rm(list=ls())
-setwd("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main")
-load("~/Desktop/INF2178/Paper 3/Political-Deepfakes-Fx-main/deepfake.RData")
+
+load("inputs/deepfake.RData")
 # source("code/03-deepfake_prereg_analysis.R")
 
 library(optparse)
@@ -108,12 +108,11 @@ panel3 <- dd %>%
           axis.text.x = element_text(size=12),
           axis.title.x = element_text(size=18))
 
-pp <- cowplot::plot_grid(panel1, panel3, nrow = 8,
-                         align="v",rel_heights = c(0.3, 1))
+pp <- cowplot::plot_grid(panel1, panel3, nrow = 2,
+                         align="v",rel_heights = c(10,30))
 
-
-cowplot::save_plot("figures/topline_exp1_a.pdf", plot = pp, base_height=25.5, base_width=8)
-system("open figures/topline_exp1_a.pdf")
+cowplot::save_plot("figures/topline_exp1_a.png", plot = pp, base_height=8, base_width=8)
+system("open figures/topline_exp1_a.png")
 
 
 ##### Experiment 1: Stacked means -- affect #### Figure 2
@@ -190,12 +189,12 @@ panel3.b <- dd %>%
           axis.text.x = element_text(size=12),
           axis.title.x = element_text(size=18))
 
-panel3.b
 
 pp.b <- cowplot::plot_grid(panel1.b, panel3.b,
-                           nrow=8, align="v", rel_heights = c(0.3,1))
-cowplot::save_plot("figures/topline_exp1_b_2.pdf", plot = pp.b, base_height=25.5, base_width=8)
-system("open figures/topline_exp1_b_2.pdf")
+                           nrow=2, align="v", rel_heights = c(10,40))
+
+cowplot::save_plot("figures/topline_exp1_b_2.png", plot = pp.b, base_height=12, base_width=8)
+system("open figures/topline_exp1_b_2.png")
 
 
 #####------------------------------------------------------#
