@@ -96,7 +96,7 @@ knitr::include_graphics(here::here("figures/topline_exp1_b_2.png"))
 
 We then want to examine the favorability heterogeneity for different subgroups. From the topline null results shown in the \@ref(fig:fig02)), we can see that young respondents are easier to be affectively triggered by fake clippings than participants aging between 25 and 44, especially presenting a significant difference with the 35-44 age subgroup ($\delta$ = -8.66, $t$= -12.16, $p$ value <0.05). The results also indicate the same finding with what authors have investigated, showing that the elderly are more likely to be affectively triggered by the inveracious media clippings than the young people ($\delta$ =3.42, $t$ =2.0196, $p$ value <0.05). The results regression model in the Appendix also shows the same insights.
 
-##Detection experiment results
+## Detection experiment results
 ```{r fig03, fig.cap='Marginal Means in Detection Experiment Outcomes',echo = FALSE, warning=FALSE, fig.align = "center", regfloat=TRUE}
 knitr::include_graphics(here::here("figures/topline_exp2.pdf"))
 ```
