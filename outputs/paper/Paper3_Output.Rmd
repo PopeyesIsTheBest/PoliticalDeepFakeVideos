@@ -2,7 +2,7 @@
 title: "Re-visiting the Political Deepfake Videos Misinformation the Public But No More than Other Fake Media (2021)"
 author: "Yilin Zhu, Jialin Zhao, Renjing Liu"
 date: "23/03/2021"
-abstract: ""
+abstract: "In this paper, we replicate the work of Barari, Christopher Lucas and Kevin Munger. We finally achieve additional insights about how young people respond to the fake media clippings, especially for the deepfake videos. In our findings, we present that there are no significant differences in deception levels between young people and other age groups. Moreover, younger participants under 24 years old achieved excellent detection accuracy in the low or high level of fake clips. "
 output: 
   bookdown::pdf_document2:
     latex_engine: xelatex
@@ -29,8 +29,6 @@ library(stargazer)
 library(knitr)
 ```
 \newpage
-
-# Abstract
 
 # Introduction
 With the continuous development of Artificial intelligence and deep learning in scientific research and applications, technologies have greatly affected many aspects of our lives. Recently, the deepfake, a term derived from the combination of “deep learning” and “fake”, which leverages open-source deep learning technology to produce a kind of inveracious content, have been used to fabricate video and audio recordings of political elites around the world, showing and saying things they have never done. And some reports have reported these videos could even lead to a coup attempt, posing remarkable threats and potential harm on the political democracy [@citelit2]. Moreover, some also expressed concerns that deepfake technology may also undermine our ability to detect both honest and dishonest claims in the real word [@citelit3]. 
@@ -71,13 +69,13 @@ First there is a figure showing the value of the estimate (namely, the mean valu
 
 In the exposure experiment, the regression model examining the age effect on deception is estimated via [@citelit1]:
 
-\begin{equation}
-$$Believei= \tau \times Agegroupi+\beta \times Xi+\varepsilon$$
-\end{equation}
+\begin{math}
+$$Believe_{i}= \tau_{i} Agegroup_{i}+\beta X_{i}+\varepsilon_{i}$$
+\end{math}
 
-where Believe$i$ is the extent of belief (from 1-5) that clipping was not fake or doctored, Agegroupi splits the sample into 5 groups based on respondents’ age: 18-24,  25-34, 35-44, 45-64 and 65+, and the age group of 18-24 acts as a reference category in the regression results. Xi is a vector of covariates including the device platform, media condition (treat), gender, education, cognitive resources (CRT), measures of digital literacy, political knowledge and internet usage, if the respondent is a sexist. $\varepsilon i$ is the error term and $\beta$ is a coefficient vector for the covariates. The model examining the age effect on affect is equivalent to that for measuring deception, except Favor$i$, the favorability as the outcome.
+where Believe$i$ is the extent of belief (from 1-5) that clipping was not fake or doctored, $Agegroup_{i}$ splits the sample into 5 groups based on respondents’ age: 18-24,  25-34, 35-44, 45-64 and 65+, and the age group of 18-24 acts as a reference category in the regression results. $X_{i}$ is a vector of covariates including the device platform, media condition (treat), gender, education, cognitive resources (CRT), measures of digital literacy, political knowledge and internet usage, if the respondent is a sexist. $\varepsilon_{i}$ is the error term and $\beta$ is a coefficient vector for the covariates. The model examining the age effect on affect is equivalent to that for measuring deception, except $Favor_{i}$, the favorability as the outcome.
 
-In the detection experiment, the key model [@citelit1] we use to test the effect of age on detection accuracy via the specification is also similar with what we have defined, except DetectAcc$i$, the ability to detect between real and fake clippings. Barari, Lucas, & Munger uses R, and our reproduction is also done in R [@citeR].
+In the detection experiment, the key model [@citelit1] we use to test the effect of age on detection accuracy via the specification is also similar with what we have defined, except $DetectAcc_{i}$, the ability to detect between real and fake clippings. Barari, Lucas, & Munger uses R, and our reproduction is also done in R [@citeR].
 
 \newpage
 
@@ -87,14 +85,14 @@ In the detection experiment, the key model [@citelit1] we use to test the effect
 knitr::include_graphics(here::here("figures/topline_exp1_a.png"))
 ```
 
-\@ref(fig:fig01)) shows the mean level of deception in each age group where the outcome is the extent of believing the clipping is fake or doctored, on a scale of 1-5. The p-values are respectively 0.392, 0.7338, 0.8289, and 0.8863 when we compare the 18-24 age group with age 25-34, age 35-44, age 45-64, and age 65+.  Finally the regression results of extent of belief on age groups and covariates are presented in the Appendix.
+\@ref(fig:fig01) shows the mean level of deception in each age group where the outcome is the extent of believing the clipping is fake or doctored, on a scale of 1-5. The p-values are respectively 0.392, 0.7338, 0.8289, and 0.8863 when we compare the 18-24 age group with age 25-34, age 35-44, age 45-64, and age 65+.  Finally the regression results of extent of belief on age groups and covariates are presented in the Appendix.
 
 ```{r fig02, fig.cap="Marginal Means in Exposure Experiment Affect Outcomes",echo = FALSE, warning=FALSE, fig.align = "center", out.width="80%",regfloat=TRUE}
 
 knitr::include_graphics(here::here("figures/topline_exp1_b_2.png"))
 ```
 
-We then want to examine the favorability heterogeneity for different subgroups. From the topline null results shown in the \@ref(fig:fig02)), we can see that young respondents are easier to be affectively triggered by fake clippings than participants aging between 25 and 44, especially presenting a significant difference with the 35-44 age subgroup ($\delta$ = -8.66, $t$= -12.16, $p$ value <0.05). The results also indicate the same finding with what authors have investigated, showing that the elderly are more likely to be affectively triggered by the inveracious media clippings than the young people ($\delta$ =3.42, $t$ =2.0196, $p$ value <0.05). The results regression model in the Appendix also shows the same insights.
+We then want to examine the favorability heterogeneity for different subgroups. From the topline null results shown in the \@ref(fig:fig02), we can see that young respondents are easier to be affectively triggered by fake clippings than participants aging between 25 and 44, especially presenting a significant difference with the 35-44 age subgroup ($\delta$ = -8.66, $t$= -12.16, $p$ value <0.05). The results also indicate the same finding with what authors have investigated, showing that the elderly are more likely to be affectively triggered by the inveracious media clippings than the young people ($\delta$ =3.42, $t$ =2.0196, $p$ value <0.05). The results regression model in the Appendix also shows the same insights.
 
 ## Detection experiment results
 ```{r fig03, fig.cap='Marginal Means in Detection Experiment Outcomes',echo = FALSE, warning=FALSE, fig.align = "center", regfloat=TRUE}
@@ -102,17 +100,17 @@ knitr::include_graphics(here::here("figures/topline_exp2.pdf"))
 ```
 
 
-\@ref(fig:fig03)) shows the overall accuracy of detecting fake videos as well as accuracy in the five age groups (18-24, 25-34, 35-44, 45-64, 65+), along with associated false positive and false negative rates in the second detection experiment. Appendix includes predictors of second stage experiment which consist of 6 regression models and shows the predictors of the second experiment detection accuracy including six age groups that involved in the detection experiment. Since our research question is to examine the differences between age groups and detection accuracy of deepfake videos, only the 45 to 65 age group is statistically significant compared to its peers. 
+\@ref(fig:fig03) shows the overall accuracy of detecting fake videos as well as accuracy in the five age groups (18-24, 25-34, 35-44, 45-64, 65+), along with associated false positive and false negative rates in the second detection experiment. Appendix includes predictors of second stage experiment which consist of 6 regression models and shows the predictors of the second experiment detection accuracy including six age groups that involved in the detection experiment. Since our research question is to examine the differences between age groups and detection accuracy of deepfake videos, only the 45 to 65 age group is statistically significant compared to its peers. 
 
 \newpage
 
 # Discussion
 ## First experiment
 
-One interesting point from \@ref(fig:fig01)) is that all age groups are statistically better at detecting the fake skit compared to video, text or audio while no significant difference is found between the later three media formats. This may imply that skit is as persuasive as the video for the youngest generation in our experiment although the skit is obviously fictionalized. However, no significant differences in deception levels between the 18-24 age group with any other groups regarding the two-sample t-tests results. The regression results shown in [ref: Table 1] also agree that there are no statistically significant differences.
+One interesting point from \@ref(fig:fig01) is that all age groups are statistically better at detecting the fake skit compared to video, text or audio while no significant difference is found between the later three media formats. This may imply that skit is as persuasive as the video for the youngest generation in our experiment although the skit is obviously fictionalized. However, no significant differences in deception levels between the 18-24 age group with any other groups regarding the two-sample t-tests results. The regression results shown in [ref: Table 1] also agree that there are no statistically significant differences.
 
 ## Second experiment
-It is clear from the graph that the best detection accuracy is observed in the 45 to 64 age group with the highest accuracy rate of detecting low-fake and high-fake videos that are around 58% and 56% respectively. There is a statistically significant difference between the 45-64 age group and second-stage detection accuracy since the p-value for regression models are less than 0.1 and 0.05[Table 4]. Compared to the false positive rate by different age groups in \@ref(fig:fig03)), the 45 to 64 age group has the lowest false positive rate which Indicating participants in this age group are less likely to identify real videos as fake clips than their peers. More specifically, respondents in the 35-44, 45-64 and 65+ age groups have shared the similarity of higher accuracy in detecting no-fake videos than low-fake and high-fake clips. Although Barari, Lucas and Munger have mentioned an interesting finding in their deepfake research paper that “users over 65 shared nearly 7 times as many as articles from fake news domains as the youngest age groups'' on Facebook [@guess2020digital]. Based on the result shown in \@ref(fig:fig03)) elder generation especially those who are over 65 years old are more likely to achieve the best detection accuracy of real videos as well as no-fake videos than the other four age groups.
+It is clear from the graph that the best detection accuracy is observed in the 45 to 64 age group with the highest accuracy rate of detecting low-fake and high-fake videos that are around 58% and 56% respectively. There is a statistically significant difference between the 45-64 age group and second-stage detection accuracy since the p-value for regression models are less than 0.1 and 0.05. Compared to the false positive rate by different age groups in \@ref(fig:fig03), the 45 to 64 age group has the lowest false positive rate which Indicating participants in this age group are less likely to identify real videos as fake clips than their peers. More specifically, respondents in the 35-44, 45-64 and 65+ age groups have shared the similarity of higher accuracy in detecting no-fake videos than low-fake and high-fake clips. Although Barari, Lucas and Munger have mentioned an interesting finding in their deepfake research paper that “users over 65 shared nearly 7 times as many as articles from fake news domains as the youngest age groups'' on Facebook [@guess2020digital]. Based on the result shown in \@ref(fig:fig03) elder generation especially those who are over 65 years old are more likely to achieve the best detection accuracy of real videos as well as no-fake videos than the other four age groups.
  
 By contrast, there is no statistically significant difference between the younger generations and second-stage detection accuracy. However, younger participants who are between 18 to 34 years old are much better at classifying low-fake videos correctly which leads to a greater value of accuracy in low-fake videos than no-fake and high-fake clips and correspondingly the lowest false-negative rate of detecting low-fake videos is observed. Participants who are under 24 years old achieved excellent detection accuracy in the low or high level of fake clips with approximately 55% and 54% respectively. However, younger generations seem less able to recognize real videos from a list of combinations of real and fake news videos, resulting in a high false-positive rate in 18-24 and 25-34 age groups where a larger difference between no-fake and high-fake is found especially in the 18-24 age group. 
  
